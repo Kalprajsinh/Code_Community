@@ -6,7 +6,7 @@ import io from 'socket.io-client';
 import Editor from "@monaco-editor/react";
 import axios from 'axios';
 
-const socket = io('http://localhost:3001');
+const socket = io('https://code-community-ftp2.onrender.com');
 
 const helloWorldExamples = {
   python: 'print("Hello, World!")',
@@ -18,8 +18,8 @@ const helloWorldExamples = {
   javascript: 'console.log("Hello, World!");'
 };
 
-const getLanguageId = (language:string) => {
-  const languageIds = {
+const getLanguageId = (language: string): number | undefined => {
+  const languageIds: { [key: string]: number } = {
     python: 71,
     c: 50,
     cpp: 54,
@@ -30,6 +30,7 @@ const getLanguageId = (language:string) => {
   };
   return languageIds[language];
 };
+
 
 export default function Home() {
   const [email, setEmail] = useState<string | null>(null);
@@ -67,7 +68,7 @@ export default function Home() {
     if (storedEmail) {
       setEmail(storedEmail);
     } else {
-      router.push('/login');
+      //router.push('/login');
     }
   }, [router]);
 
@@ -84,7 +85,7 @@ export default function Home() {
   };
 
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedLanguage = e.target.value;
+    const selectedLanguage = e.target.value as keyof typeof helloWorldExamples;
     setLanguage(selectedLanguage);
     setCode(helloWorldExamples[selectedLanguage]);
   };
@@ -232,7 +233,7 @@ export default function Home() {
               </div>
               <div className="flex justify-between w-full">
                 <div className="flex">
-                  <button
+                  {/* <button
                     className="bg-darkbg text-white py-2 px-5 rounded-md w-16 h-8 text-base font-bold flex justify-center items-center m-2 md:block hidden"
                   >
                     📂
@@ -241,18 +242,23 @@ export default function Home() {
                     className="bg-lightbg text-white py-2 px-5 rounded-md w-16 h-8 text-base font-bold hover:bg-textcolor hover:text-darkbg flex justify-center items-center m-2 md:block hidden"
                   >
                     
-                  </button>
-                  <button
+                  </button> */}
+                  <div className="flex justify-center items-center m-4">
+
+                  &lt;/&gt;&nbsp;
+                  </div>
+                </div>
+          
+                <div className="flex items-center gap-2">
+                <button
                     className="bg-lightbg text-white py-2 px-5 rounded-md hover:bg-textcolor hover:text-darkbg h-8 text-base font-bold flex justify-center items-center m-2"
                     onClick={compileCode}
                     disabled={isLoading}
                   >
                     {isLoading ? 'Compiling...' : 'RUN'}
                   </button>
-                </div>
-                <div className="flex items-center gap-2">
                   <select
-                    className="px-2 py-1 rounded-lg bg-gray-600 text-white bg-darkbg"
+                    className="px-2 py-1 rounded-lg bg-gray-600 text-white bg-lightbg"
                     value={language}
                     onChange={handleLanguageChange}
                   >
