@@ -6,7 +6,7 @@ import io from 'socket.io-client';
 import Editor from "@monaco-editor/react";
 import axios from 'axios';
 
-const socket = io('https://code-community-ftp2.onrender.com');
+const socket = io('http://localhost:3001');
 
 const helloWorldExamples = {
   python: 'print("Hello, World!")',
@@ -46,17 +46,17 @@ export default function Home() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(true);
 
   useEffect(() => {
-    // Listen for incoming messages
+    
     socket.on('text', (message: string) => {
       setCode(message);
     });
 
-    // Listen for room users updates
+    
     socket.on('room_users', (users: Array<{ id: string, username: string }>) => {
       setUsers(users);
     });
 
-    // Cleanup on component unmount
+    
     return () => {
       socket.off('text');
       socket.off('room_users');
@@ -157,9 +157,6 @@ export default function Home() {
             </button>
           </form>
         </div>
-        <button onClick={()=>{
-                router.push("/Home");
-            }}>Home</button>
       </div>
     );
   }
@@ -211,7 +208,14 @@ export default function Home() {
               </li>
             ))}
           </ul>
-
+          <button  className="bg-lightbg text-white py-2 px-5 rounded-md">
+          Start Video Call
+        </button>
+        <div>
+            <video autoPlay muted className="w-48 h-48"></video>
+            <video  autoPlay className="w-48 h-48"></video>
+          </div>
+        
         </div>
 
         {/* Main content area */}
@@ -304,17 +308,16 @@ export default function Home() {
   );
 }
 
-// C:\Users\91878\OneDrive\Desktop\Notes\0-100\.0000000_____get_post_put_delete\Realtime_online_compiler\compiler\server
-// C:\Users\91878\OneDrive\Desktop\Notes\0-100\.0000000_____get_post_put_delete\coding_platform
 // "use client";
 
-// import React, { useEffect, useState } from "react";
-// import { useRouter } from 'next/navigation';
-// import io from 'socket.io-client';
+// import React, { useEffect, useState, useRef } from "react";
+// import { useRouter } from "next/navigation";
+// import io from "socket.io-client";
 // import Editor from "@monaco-editor/react";
-// import axios from 'axios';
+// import axios from "axios";
 
-// const socket = io('http://localhost:3001');
+// // WebSocket connection
+// const socket = io("http://localhost:3001");
 
 // const helloWorldExamples = {
 //   python: 'print("Hello, World!")',
@@ -339,43 +342,45 @@ export default function Home() {
 //   return languageIds[language];
 // };
 
-//   export default function Home() {
-//   const [email, setEmail] = useState<string | null>(null);
-//   const [code, setCode] = useState<string>(helloWorldExamples.python);
-//   const [language, setLanguage] = useState<string>('python');
-//   const [output, setOutput] = useState<string>('');
-//   const [isLoading, setIsLoading] = useState<boolean>(false);
-//   const [room, setRoom] = useState<string>('');
-//   const [username, setUsername] = useState<string>('');
-//   const [joined, setJoined] = useState<boolean>(false);
-//   const [users, setUsers] = useState<Array<{ id: string, username: string }>>([]);
+// export default function Home() {
+//   const [email, setEmail] = useState(null);
+//   const [code, setCode] = useState(helloWorldExamples.python);
+//   const [language, setLanguage] = useState("python");
+//   const [output, setOutput] = useState("");
+//   const [isLoading, setIsLoading] = useState(false);
+//   const [room, setRoom] = useState("");
+//   const [username, setUsername] = useState("");
+//   const [joined, setJoined] = useState(false);
+//   const [users, setUsers] = useState([]);
 //   const router = useRouter();
 //   const [isDrawerOpen, setIsDrawerOpen] = useState(true);
 
+//   // WebRTC states
+//   const [localStream, setLocalStream] = useState(null);
+//   const [remoteStream, setRemoteStream] = useState(null);
+//   const localVideoRef = useRef();
+//   const remoteVideoRef = useRef();
+//   const pc = useRef();
+
 //   useEffect(() => {
-//     // Listen for incoming messages
-//     socket.on('text', (message: string) => {
+//     socket.on("text", (message) => {
 //       setCode(message);
 //     });
 
-//     // Listen for room users updates
-//     socket.on('room_users', (users: Array<{ id: string, username: string }>) => {
+//     socket.on("room_users", (users) => {
 //       setUsers(users);
 //     });
 
-//     // Cleanup on component unmount
 //     return () => {
-//       socket.off('text');
-//       socket.off('room_users');
+//       socket.off("text");
+//       socket.off("room_users");
 //     };
 //   }, [code]);
 
 //   useEffect(() => {
-//     const storedEmail = localStorage.getItem('email');
+//     const storedEmail = localStorage.getItem("email");
 //     if (storedEmail) {
 //       setEmail(storedEmail);
-//     } else {
-//       router.push('/login');
 //     }
 //   }, [router]);
 
@@ -383,15 +388,15 @@ export default function Home() {
 //     setIsDrawerOpen(!isDrawerOpen);
 //   };
 
-//   const handleChange = (value: string | undefined) => {
+//   const handleChange = (value) => {
 //     if (value !== undefined) {
 //       setCode(value);
 //       // Emit the text to the server
-//       socket.emit('text', room, value);
+//       socket.emit("text", room, value);
 //     }
 //   };
 
-//   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+//   const handleLanguageChange = (e) => {
 //     const selectedLanguage = e.target.value;
 //     setLanguage(selectedLanguage);
 //     setCode(helloWorldExamples[selectedLanguage]);
@@ -399,17 +404,17 @@ export default function Home() {
 
 //   const compileCode = async () => {
 //     const options = {
-//       method: 'POST',
-//       url: 'https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=false&wait=true',
+//       method: "POST",
+//       url: "https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=false&wait=true",
 //       headers: {
 //         'x-rapidapi-key': '6129d442d1mshc5b312e0de8c457p183411jsn6a0870a6274a',
-//         'x-rapidapi-host': 'judge0-ce.p.rapidapi.com',
-//         'Content-Type': 'application/json'
+//         "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
+//         "Content-Type": "application/json"
 //       },
 //       data: {
 //         language_id: getLanguageId(language),
 //         source_code: code,
-//         stdin: ''
+//         stdin: ""
 //       }
 //     };
 
@@ -418,15 +423,61 @@ export default function Home() {
 //       const response = await axios.request(options);
 //       setOutput(response.data.stdout || response.data.stderr);
 //     } catch (error) {
-//       setOutput('Error: ' + error.message);
+//       setOutput("Error: " + error.message);
 //     }
 //     setIsLoading(false);
 //   };
 
 //   const handleJoinRoom = () => {
-//     socket.emit('join_room', { room, username });
+//     socket.emit("join_room", { room, username });
 //     setJoined(true);
 //   };
+
+//   // Video call functions
+//   const startVideoCall = async (userId) => {
+//     pc.current = new RTCPeerConnection();
+
+//     // Add local stream tracks to peer connection
+//     localStream.getTracks().forEach((track) => {
+//       pc.current.addTrack(track, localStream);
+//     });
+
+//     pc.current.ontrack = (event) => {
+//       setRemoteStream(event.streams[0]);
+//     };
+
+//     const offer = await pc.current.createOffer();
+//     await pc.current.setLocalDescription(new RTCSessionDescription(offer));
+
+//     socket.emit("user:call", { to: userId, offer });
+//   };
+
+//   const startLocalStream = async () => {
+//     const stream = await navigator.mediaDevices.getUserMedia({
+//       video: true,
+//       audio: true
+//     });
+//     setLocalStream(stream);
+//     localVideoRef.current.srcObject = stream;
+//   };
+
+//   useEffect(() => {
+//     socket.on("incomming:call", async ({ from, offer }) => {
+//       pc.current.setRemoteDescription(new RTCSessionDescription(offer));
+//       const answer = await pc.current.createAnswer();
+//       await pc.current.setLocalDescription(new RTCSessionDescription(answer));
+//       socket.emit("call:accepted", { to: from, ans: answer });
+//     });
+
+//     socket.on("call:accepted", async ({ ans }) => {
+//       await pc.current.setRemoteDescription(new RTCSessionDescription(ans));
+//     });
+
+//     return () => {
+//       socket.off("incomming:call");
+//       socket.off("call:accepted");
+//     };
+//   }, []);
 
 //   if (!joined) {
 //     return (
@@ -445,7 +496,7 @@ export default function Home() {
 //               placeholder="Room ID"
 //               value={room}
 //               onChange={(e) => setRoom(e.target.value)}
-//               className="p-2 rounded-md"
+//               className="p-2 rounded-md text-darkbg"
 //               required
 //             />
 //             <input
@@ -453,7 +504,7 @@ export default function Home() {
 //               placeholder="Username"
 //               value={username}
 //               onChange={(e) => setUsername(e.target.value)}
-//               className="p-2 rounded-md"
+//               className="p-2 rounded-md text-darkbg"
 //               required
 //             />
 //             <button
@@ -471,19 +522,17 @@ export default function Home() {
 //   return (
 //     <div className="w-full h-screen bg-darkbg overflow-hidden">
 //       <div className="w-full h-20 border-b-2 border-b-textcolor text-2xl flex items-center p-5 justify-between">
-//         <div className="font-bold">
-//           &lt;/&gt;&nbsp;Compiler
-//         </div>
+//         <div className="font-bold">&lt;/&gt;&nbsp;Compiler</div>
 //         <div className="flex gap-3">
 //           <button
-//             className="bg-lightbg text-white py-2 px-5 rounded-md hover:bg-textcolor hover:text-darkbg w-20 h-10 text-base font-bold md:flex justify-center items-center md:block hidden"
-//             onClick={() => { router.push('/signup', { scroll: false }) }}
+//             className="bg-lightbg text-white py-2 px-5 rounded-md hover:bg-textcolor hover:text-darkbg w-20 h-10 text-base font-bold"
+//             onClick={() => router.push("/signup", { scroll: false })}
 //           >
 //             Signup
 //           </button>
 //           <button
-//             className="bg-lightbg text-white py-2 px-5 rounded-md hover:bg-textcolor hover:text-darkbg w-20 h-10 text-base font-bold flex justify-center items-center"
-//             onClick={() => { router.push('/login', { scroll: false }) }}
+//             className="bg-lightbg text-white py-2 px-5 rounded-md hover:bg-textcolor hover:text-darkbg w-20 h-10 text-base font-bold"
+//             onClick={() => router.push("/login", { scroll: false })}
 //           >
 //             Login
 //           </button>
@@ -491,72 +540,107 @@ export default function Home() {
 //       </div>
 
 //       <div className="w-full h-screen flex">
-//         {/* Drawer section */}
+//         {/* Sidebar */}
 //         <div
 //           className={`${
 //             isDrawerOpen ? "block" : "hidden"
-//           } fixed md:relative w-1/6 bg-darkbg text-white border-r border-textcolor h-screen p-4 transition-all duration-300 ease-in-out transform`}
+//           } fixed md:relative w-1/6 border-r border-textcolor h-screen bg-lightbg md:bg-transparent`}
 //         >
-//           <h2 className="text-xl font-bold mb-4">Users in Room</h2>
-//           <ul>
+//           <div className="p-2 flex gap-3 items-center border-b border-b-textcolor h-12">
+//             <a onClick={toggleDrawer} className="cursor-pointer text-vs">
+//               Users
+//             </a>
+//             <button
+//               className="bg-lightbg text-white rounded-md text-textcolor w-1 h-4 text-vs font-bold md:w-6 md:h-6 md:text-sm"
+//               onClick={toggleDrawer}
+//             >
+//               &lt;-
+//             </button>
+//           </div>
+//           <p className="text-vs">&nbsp;</p>
+//           <ul className="grid grid-cols-1 md:grid-cols-2">
 //             {users.map((user) => (
-//               <li key={user.id} className="py-1">
-//                 {user.username}
+//               <li
+//                 key={user.id}
+//                 className="flex justify-center items-center font-bold mb-3"
+//               >
+//                 <div className="bg-darkbg w-12 text-sm xl:w-28 xl:h-16 h-12 xl:text-base rounded-xl flex justify-center items-center">
+//                   {user.username}
+//                 </div>
 //               </li>
 //             ))}
 //           </ul>
+//           <button
+//             className="bg-lightbg text-white py-2 px-5 rounded-md"
+//             onClick={startLocalStream}
+//           >
+//             Start Video Call
+//           </button>
+//           <button
+//         onClick={() => startVideoCall(users.id)}
+//         className="bg-blue-500 text-white py-1 px-3 rounded-md hover:bg-blue-600"
+//       >
+//         Call
+//       </button>
+//           <div>
+//             <video ref={localVideoRef} autoPlay muted className="w-48 h-48" />
+//             <video ref={remoteVideoRef} autoPlay className="w-48 h-48" />
+//           </div>
 //         </div>
 
-//         {/* Main content section */}
-//         <div className="flex-grow flex flex-col">
-//           <div className="flex justify-between items-center p-2 border-b border-b-textcolor">
-//             <div className="md:hidden p-2 flex gap-3 items-center h-12">
-//               <a onClick={toggleDrawer} className="cursor-pointer text-vs">
-//                 Users
-//               </a>
-//               <button
-//                 className="text-white text-textcolor rounded-md w-1 h-4 text-vs font-bold md:w-6 md:h-6 md:text-sm flex pt-0.5"
-//                 onClick={toggleDrawer}
+//         {/* Main content */}
+//         <div
+//           className={`${
+//             isDrawerOpen ? "w-5/6" : "w-full"
+//           } border-r border-textcolor h-screen flex ml-auto`}
+//         >
+//           <div className="w-2/3 border-r border-textcolor h-screen">
+//             <div className="border-b border-b-textcolor h-12 flex">
+//               <div
+//                 className={`${isDrawerOpen ? "hidden" : ""} p-2 flex gap-3 items-center h-12`}
 //               >
-//                 -&gt;
-//               </button>
-//             </div>
-//             <div className="flex justify-between w-full">
-//               <div className="flex">
+//                 <a onClick={toggleDrawer} className="cursor-pointer text-vs">
+//                   Users
+//                 </a>
 //                 <button
-//                   className="bg-lightbg text-white py-2 px-5 rounded-md hover:bg-textcolor hover:text-darkbg w-16 h-8 text-base font-bold flex justify-center items-center m-2"
-//                   onClick={() => { router.push('/login', { scroll: false }) }}
+//                   className="text-white text-textcolor rounded-md w-1 h-4 text-vs font-bold md:w-6 md:h-6 md:text-sm flex pt-0.5"
+//                   onClick={toggleDrawer}
 //                 >
-//                   📂
-//                 </button>
-//                 <button
-//                   className="bg-lightbg text-white py-2 px-5 rounded-md hover:bg-textcolor hover:text-darkbg h-8 text-base font-bold flex justify-center items-center m-2"
-//                   onClick={compileCode}
-//                   disabled={isLoading}
-//                 >
-//                   {isLoading ? 'Compiling...' : 'RUN'}
+//                   -&gt;
 //                 </button>
 //               </div>
-//               <div className="flex items-center gap-2">
-//                 <select
-//                   className="px-2 py-1 rounded-lg bg-gray-600 text-white bg-darkbg"
-//                   value={language}
-//                   onChange={handleLanguageChange}
-//                 >
-//                   <option value="python">Python</option>
-//                   <option value="c">C</option>
-//                   <option value="cpp">C++</option>
-//                   <option value="java">Java</option>
-//                   <option value="csharp">C#</option>
-//                   <option value="php">PHP</option>
-//                   <option value="javascript">Javascript</option>
-//                 </select>
-//                 <span className="text-white">⚙️</span>
-//               </div>
-//             </div>
-//           </div>
+//               <div className="flex justify-between w-full">
+//                 <div className="flex">
+//                   <div className="flex justify-center items-center m-4">
+//                     &lt;/&gt;&nbsp;
+//                   </div>
+//                 </div>
 
-//           <div className="w-full h-full flex">
+//                 <div className="flex items-center gap-2">
+//                   <button
+//                     className="bg-lightbg text-white py-2 px-5 rounded-md hover:bg-textcolor hover:text-darkbg h-8 text-base font-bold flex justify-center items-center m-2"
+//                     onClick={compileCode}
+//                     disabled={isLoading}
+//                   >
+//                     {isLoading ? "Compiling..." : "RUN"}
+//                   </button>
+//                   <select
+//                     className="px-2 py-1 rounded-lg bg-gray-600 text-white bg-lightbg"
+//                     value={language}
+//                     onChange={handleLanguageChange}
+//                   >
+//                     <option value="python">Python</option>
+//                     <option value="c">C</option>
+//                     <option value="cpp">C++</option>
+//                     <option value="java">Java</option>
+//                     <option value="csharp">C#</option>
+//                     <option value="php">PHP</option>
+//                     <option value="javascript">Javascript</option>
+//                   </select>
+//                   <span className="text-white">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+//                 </div>
+//               </div>
+//             </div>
 //             <div className="w-full h-full">
 //               <Editor
 //                 defaultLanguage="python"
@@ -567,15 +651,15 @@ export default function Home() {
 //                 className="w-full h-full"
 //               />
 //             </div>
-//             <div className="w-1/3 border-r border-textcolor h-screen">
-//               <div className="border-b border-b-textcolor h-12 flex items-center px-2 text-white">
-//                 &gt;_ output ⚙️
-//               </div>
-//               <div className="p-4 text-white">
-//                 <pre className="w-full h-full p-2 bg-gray-900 rounded-b-lg overflow-auto">
-//                   {output}
-//                 </pre>
-//               </div>
+//           </div>
+//           <div className="w-1/3 border-r border-textcolor h-screen">
+//             <div className="border-b border-b-textcolor h-12 flex items-center px-2 text-white justify-center">
+//               &gt;_ output
+//             </div>
+//             <div className="p-4 text-white">
+//               <pre className="w-full h-full p-2 bg-gray-900 rounded-b-lg overflow-auto">
+//                 {output}
+//               </pre>
 //             </div>
 //           </div>
 //         </div>
