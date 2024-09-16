@@ -1,0 +1,13 @@
+version: '3'
+services:
+  app:
+    build: .
+    ports:
+      - "9000:9000"
+      - "3000:3000"
+    volumes:
+      - .:/app       # Mount the current directory inside the container
+      - /app/node_modules # Ignore node_modules to prevent overwriting
+      - ./user:/app/user  # Mount the user directory for filesystem changes
+    stdin_open: true   # Keep stdin open for the terminal
+    tty: true          # Allocate a pseudo-TTY for the terminal

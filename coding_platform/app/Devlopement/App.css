@@ -1,0 +1,29 @@
+.playground-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .editor-container {
+    min-height: 60vh;
+    display: flex;
+  }
+  
+  .files {
+    padding: 20px;
+    width: 10vw;
+  }
+  
+  .editor {
+    width: 90vw;
+  }
+  
+  .file-node {
+    cursor: pointer;
+    color: white; 
+  }
+  
+  li {
+    list-style: none;
+    line-height: 24px;
+  }
+  
