@@ -7,17 +7,18 @@ const config: Config = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    fontSize: {
-      vs: ['10px', '12px'],
-      sm: ['14px', '20px'],
-      base: ['16px', '24px'],
-      lg: ['20px', '28px'],
-      xl: ['24px', '32px'],
-    },
+    // fontSize: {
+    //   vs: ['10px', '12px'],
+    //   sm: ['14px', '20px'],
+    //   base: ['16px', '24px'],
+    //   lg: ['20px', '28px'],
+    //   xl: ['24px', '32px'],
+    // },
     colors: {
       'darkbg': '#0F172A',
       'lightbg': '#0E2D41',
-      'textcolor': '#7DD2FB'
+      'textcolor': '#7DD2FB',
+      'black': '#000000'
     },
     extend: {
       backgroundImage: {

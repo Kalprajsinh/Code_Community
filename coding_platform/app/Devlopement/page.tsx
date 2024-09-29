@@ -179,34 +179,77 @@ function App() {
   }, []);
 
   return (
-    <div className="playground-container">
-      <div className="editor-container">
-        <div className="files">
+    <div className="playground-container h-screen flex flex-col overflow-hidden">
+      {/* Toolbar */}
+      <div className="toolbar bg-darkbg text-white p-2 flex justify-between items-center">
+        <div className="toolbar-left flex items-center gap-4">
+          <span className="text-blue-400">●</span> CoDev Virtual Container
+        </div>
+        <div className="toolbar-right flex gap-4">
+          <button className="text-gray-400 hover:text-white" onClick={
+            () => {
+              (path) => {
+                setSelectedFileContent('');
+                setSelectedFile(path);
+                setCode(selectedFileContent)
+              }
+
+            }
+          }>Save</button>
+          <button className="text-gray-400 hover:text-white">Edit</button>
+          <button className="text-gray-400 hover:text-white">View</button>
+        </div>
+      </div>
+
+      {/* Main Editor Area */}
+      <div className="editor-area flex flex-grow">
+        {/* Sidebar File Explorer */}
+        <div className="file-explorer w-1/6 bg-lightbg text-gray-300 p-4">
+        EXPLORER
           <FileTree
-            onSelect={(path:any) => {
-              setSelectedFileContent("");
+            onSelect={(path) => {
+              setSelectedFileContent('');
               setSelectedFile(path);
             }}
             tree={fileTree}
           />
         </div>
-        <div className="editor">
-          {selectedFile && (
-            <p>
-              {selectedFile.replaceAll("/", " > ")}{" "}
-              {isSaved ? "Saved" : "Unsaved"}
-            </p>
-          )}
-          <AceEditor
-            width="100%"
-            mode={getFileMode({ selectedFile })}
-            value={code}
-            onChange={(e) => setCode(e)}
-          />
-        </div>
-      </div>
-      <div className="terminal-container">
+        {/* Code Editor */}
+        <div className="editor flex-grow bg-darkbg text-white relative">
+          <div className="editor-header bg-gray-800 text-gray-300 p-2 flex justify-between items-center">
+            {selectedFile && (
+              <p className="text-sm">
+                {selectedFile.replaceAll('/', ' > ')} {isSaved ? " - Saved" : " - Unsaved"}
+              </p>
+            )}
+          </div>
+          <div className="editor-content p-4 h-3/5">
+            {selectedFile ? (
+              <AceEditor
+                width="100%"
+                height="calc(100% - 40px)"
+                mode={getFileMode({ selectedFile })}
+                theme="monokai"
+                value={code}
+                onChange={(e) => setCode(e)}
+                fontSize={14}
+                setOptions={{
+                  enableBasicAutocompletion: true,
+                  enableLiveAutocompletion: true,
+                  enableSnippets: true
+                }}
+              />
+            ) : (
+              <div className="text-gray-400 text-sm flex justify-center items-center h-full">
+                Select a file to start coding
+              </div>
+            )}
+            <div className="terminal bg-black text-white p-2 h-full">
+            Terminal <hr />
         <Terminal />
+      </div>
+          </div>
+        </div>
       </div>
     </div>
   );
