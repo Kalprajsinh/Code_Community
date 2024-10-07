@@ -1,87 +1,222 @@
-const http = require('http')
-const express = require('express')
-const fs = require('fs/promises')
-const { Server: SocketServer } = require('socket.io')
-const path = require('path')
-const cors = require('cors')
+const http = require('http');
+const express = require('express');
+const fs = require('fs/promises');
+const { Server: SocketIO } = require('socket.io');
+const path = require('path');
+const cors = require('cors');
 const chokidar = require('chokidar');
+const pty = require('node-pty');
 
-const pty = require('node-pty')
-
-const ptyProcess = pty.spawn('bash', [], {
-    name: 'xterm-color',
-    cols: 80,
-    rows: 30,
-    cwd: process.env.INIT_CWD + '/user',
-    env: process.env
-});
-
-const app = express()
+// Initialize Express app and HTTP server
+const app = express();
 const server = http.createServer(app);
-const io = new SocketServer({
-    cors: '*'
-})
 
-app.use(cors())
-
-io.attach(server);
-
-chokidar.watch('./user').on('all', (event, path) => {
-    io.emit('file:refresh', path)
+// Initialize Socket.IO with CORS configuration
+const io = new SocketIO(server, {
+    cors: {
+        origin: '*',
+    },
 });
 
-ptyProcess.onData(data => {
-    io.emit('terminal:data', data)
-})
+// Define the initial folder name
+let folderName = path.join(__dirname, 'user');
+let watcher = null;
+let ptyProcess = null;
 
-io.on('connection', (socket) => {
-    console.log(`Socket connected`, socket.id)
+// Middleware
+app.use(cors());
+app.use(express.json()); // Parse JSON bodies
 
-    socket.emit('file:refresh')
+/**
+ * Route: GET /dirname
+ * Description: Sets the directory name, creates it if it doesn't exist, and starts watching it.
+ */
+app.get('/dirname', async (req, res) => {
+    const { dirname } = req.query;
 
-    socket.on('file:change', async ({ path, content }) => {
-        await fs.writeFile(`./user${path}`, content)
-    })
+    if (!dirname) {
+        return res.status(400).json({ error: 'dirname is required' });
+    }
 
-    socket.on('terminal:write', (data) => {
-        console.log('Term', data)
-        ptyProcess.write(data);
-    })
-})
+    folderName = path.join(__dirname, dirname);
 
+    try {
+        await fs.access(folderName);
+        console.log(`Directory exists: ${folderName}`);
+    } catch (err) {
+        try {
+            await fs.mkdir(folderName, { recursive: true });
+            console.log(`Directory created: ${folderName}`);
+        } catch (mkdirErr) {
+            console.error('Error creating directory:', mkdirErr);
+            return res.status(500).json({ error: 'Failed to create directory' });
+        }
+    }
+
+    // Restart watcher and PTY with the new folder
+    restartWatcher(folderName);
+    restartPty(folderName);
+
+    return res.status(200).json({ message: `Directory is ready: ${folderName}` });
+});
+
+/**
+ * Route: GET /files
+ * Description: Retrieves the file tree of the current directory.
+ */
 app.get('/files', async (req, res) => {
-    const fileTree = await generateFileTree('./user');
-    return res.json({ tree: fileTree })
-})
+    try {
+        const fileTree = await generateFileTree(folderName);
+        res.json({ tree: fileTree });
+    } catch (err) {
+        console.error('Error generating file tree:', err);
+        res.status(500).json({ error: 'Failed to retrieve file tree' });
+    }
+});
 
+/**
+ * Route: GET /files/content
+ * Description: Retrieves the content of a specific file.
+ */
 app.get('/files/content', async (req, res) => {
-    const path = req.query.path;
-    const content = await fs.readFile(`./user${path}`, 'utf-8')
-    return res.json({ content })
-})
+    const filePath = req.query.path;
 
-server.listen(9000, () => console.log(`🐳 Docker server running on port 9000`))
+    if (!filePath) {
+        return res.status(400).json({ error: 'path query parameter is required' });
+    }
 
+    const absolutePath = path.join(folderName, filePath);
 
+    try {
+        const content = await fs.readFile(absolutePath, 'utf-8');
+        res.json({ content });
+    } catch (err) {
+        console.error('Error reading file:', err);
+        res.status(500).json({ error: 'Failed to read file content' });
+    }
+});
+
+/**
+ * Socket.IO Connection Handler
+ */
+io.on('connection', (socket) => {
+    console.log(`Socket connected: ${socket.id}`);
+
+    // Emit initial file refresh
+    socket.emit('file:refresh');
+
+    /**
+     * Handle file changes from clients
+     */
+    socket.on('file:change', async ({ path: filePath, content }) => {
+        const absolutePath = path.join(folderName, filePath);
+        try {
+            await fs.writeFile(absolutePath, content, 'utf-8');
+            console.log(`File updated: ${absolutePath}`);
+        } catch (err) {
+            console.error('Error writing file:', err);
+            socket.emit('error', { message: 'Failed to write file' });
+        }
+    });
+
+    /**
+     * Handle terminal input from clients
+     */
+    socket.on('terminal:write', (data) => {
+        if (ptyProcess) {
+            ptyProcess.write(data);
+        }
+    });
+
+    socket.on('disconnect', () => {
+        console.log(`Socket disconnected: ${socket.id}`);
+    });
+});
+
+/**
+ * Start the server
+ */
+const PORT = 9000;
+server.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+    // Initialize watcher and PTY on server start
+    restartWatcher(folderName);
+    restartPty(folderName);
+});
+
+/**
+ * Starts or restarts the file watcher for the specified directory.
+ * @param {string} directory - The directory to watch.
+ */
+function restartWatcher(directory) {
+    if (watcher) {
+        watcher.close();
+    }
+
+    watcher = chokidar.watch(directory, { ignoreInitial: true });
+
+    watcher.on('all', (event, filePath) => {
+        console.log(`File ${event}: ${filePath}`);
+        io.emit('file:refresh', filePath);
+    });
+
+    watcher.on('error', (error) => {
+        console.error('Watcher error:', error);
+    });
+
+    console.log(`Started watching directory: ${directory}`);
+}
+
+/**
+ * Starts or restarts the PTY process for the specified directory.
+ * @param {string} cwd - The current working directory for the PTY.
+ */
+function restartPty(cwd) {
+    if (ptyProcess) {
+        ptyProcess.kill();
+    }
+
+    ptyProcess = pty.spawn('bash', [], {
+        name: 'xterm-color',
+        cols: 80,
+        rows: 30,
+        cwd,
+        env: process.env,
+    });
+
+    ptyProcess.onData((data) => {
+        io.emit('terminal:data', data);
+    });
+
+    ptyProcess.onExit(() => {
+        console.log('PTY process exited');
+    });
+
+    console.log(`PTY process started in directory: ${cwd}`);
+}
+
+/**
+ * Generates a file tree structure for the specified directory.
+ * @param {string} directory - The root directory to generate the tree from.
+ * @returns {Object} - The file tree.
+ */
 async function generateFileTree(directory) {
-    const tree = {}
+    const tree = {};
 
     async function buildTree(currentDir, currentTree) {
-        const files = await fs.readdir(currentDir)
+        const entries = await fs.readdir(currentDir, { withFileTypes: true });
 
-        for (const file of files) {
-            const filePath = path.join(currentDir, file)
-            const stat = await fs.stat(filePath)
-
-            if (stat.isDirectory()) {
-                currentTree[file] = {}
-                await buildTree(filePath, currentTree[file])
+        for (const entry of entries) {
+            const entryPath = path.join(currentDir, entry.name);
+            if (entry.isDirectory()) {
+                currentTree[entry.name] = {};
+                await buildTree(entryPath, currentTree[entry.name]);
             } else {
-                currentTree[file] = null
+                currentTree[entry.name] = null;
             }
         }
     }
 
     await buildTree(directory, tree);
-    return tree
+    return tree;
 }

@@ -18,7 +18,10 @@ const config: Config = {
       'darkbg': '#0F172A',
       'lightbg': '#0E2D41',
       'textcolor': '#7DD2FB',
-      'black': '#000000'
+      'black': '#000000',
+      'white': '#FFFFFF',
+      'red': '#e74c3c',
+
     },
     extend: {
       backgroundImage: {
@@ -28,6 +31,8 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('tailwind-scrollbar-hide')
+  ],
 };
 export default config;

@@ -1,10 +1,7 @@
 "use client"
 import { useCallback, useEffect, useState,useRef } from "react";
 import "./App.css";
-import AceEditor from "react-ace";
-import "ace-builds/src-noconflict/mode-javascript";
-import "ace-builds/src-noconflict/theme-github";
-import "ace-builds/src-noconflict/ext-language_tools";
+import Editor from "@monaco-editor/react";
 import { io } from 'socket.io-client'
 import { Terminal as XTerminal } from "@xterm/xterm";
 import "@xterm/xterm/css/xterm.css";
@@ -225,11 +222,12 @@ function App() {
           </div>
           <div className="editor-content p-4 h-3/5">
             {selectedFile ? (
-              <AceEditor
+              <Editor
                 width="100%"
                 height="calc(100% - 40px)"
                 mode={getFileMode({ selectedFile })}
-                theme="monokai"
+                language="javascript"
+                theme="vs-dark"
                 value={code}
                 onChange={(e) => setCode(e)}
                 fontSize={14}
@@ -244,7 +242,7 @@ function App() {
                 Select a file to start coding
               </div>
             )}
-            <div className="terminal bg-black text-white p-2 h-full">
+            <div className=" absolute w-full scrollbar-hide z-10 terminal bg-black text-white p-2 h-full">
             Terminal <hr />
         <Terminal />
       </div>

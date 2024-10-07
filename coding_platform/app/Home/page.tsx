@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import io from 'socket.io-client';
 import Editor from "@monaco-editor/react";
 import axios from 'axios';
+import { useSession,signOut } from "next-auth/react";
 
 const socket = io('http://localhost:3001');
 
@@ -44,6 +45,7 @@ export default function Home() {
   const [users, setUsers] = useState<Array<{ id: string, username: string }>>([]);
   const router = useRouter();
   const [isDrawerOpen, setIsDrawerOpen] = useState(true);
+  const { data: session } = useSession();
 
   useEffect(() => {
     
@@ -167,20 +169,53 @@ export default function Home() {
         <div className="font-bold">
           &lt;/&gt;&nbsp;Compiler
         </div>
-        <div className="flex gap-3">
-          <button
-            className="bg-lightbg text-white py-2 px-5 rounded-md hover:bg-textcolor hover:text-darkbg w-20 h-10 text-base font-bold md:flex justify-center items-center md:block hidden"
-            onClick={() => { router.push('/signup', { scroll: false }) }}
-          >
-            Signup
-          </button>
-          <button
-            className="bg-lightbg text-white py-2 px-5 rounded-md hover:bg-textcolor hover:text-darkbg w-20 h-10 text-base font-bold flex justify-center items-center"
-            onClick={() => { router.push('/login', { scroll: false }) }}
-          >
-            Login
-          </button>
-        </div>
+        <div className="flex justify-center items-center gap-2 mr-4 text-xl">
+        {!session?.user ? (
+          <>
+            <button
+              className="w-20 h-10 p-2 text-textcolor text-sm"
+              onClick={() => {
+                router.push("/login");
+              }}
+            >
+              Login
+            </button>
+            <button
+              className="w-20 h-10 border p-2 bg-textcolor rounded-full text-black text-sm"
+              onClick={() => {
+                router.push("/signup");
+              }}
+            >
+              SignUp
+            </button>
+          </>
+        ) : (
+          // If user is authenticated, display user info and sign out button
+          <div className="flex items-center gap-4">
+            <img
+              src={session.user.image ?? "/default-avatar.png"} // Fallback to default avatar
+              width={32} // Adjust size as needed
+              height={32}
+              className="rounded-full"
+              alt="User profile"
+            />
+            <div className="flex flex-col">
+              <span className="text-sky-600">{session.user.name}</span>
+              <span className="text-sky-600 text-sm">{session.user.email}</span>
+            </div>
+            <button
+              onClick={() => {signOut()
+                router.push("/");
+              }
+                
+              }
+              className="w-20 h-10 p-2 text-textcolor text-lg hover:text-white transition"
+            >
+              Logout
+            </button>
+          </div>
+        )}
+      </div>
       </div>
 
       <div className="w-full h-screen flex">
@@ -208,9 +243,7 @@ export default function Home() {
               </li>
             ))}
           </ul>
-          <button  className="bg-lightbg text-white py-2 px-5 rounded-md">
-          Start Video Call
-        </button>
+          
         <div>
             <video autoPlay muted className="w-48 h-48"></video>
             <video  autoPlay className="w-48 h-48"></video>
