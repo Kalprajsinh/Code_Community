@@ -4,7 +4,7 @@ import { FaCode, FaTerminal,FaLaptopCode,FaDocker, FaFile, FaCodepen,FaReact,FaN
 import { SiNextdotjs, SiTypescript, SiTailwindcss, SiExpress, SiPostgresql, SiAuth0, SiWebrtc, SiWebstorm, SiConfluence, SiSocketdotio, SiEditorconfig } from "react-icons/si";
 import { TypeAnimation } from 'react-type-animation';
 import { useRouter } from "next/navigation";
-import Header from "./Component/Header";
+import Header from "./component/Header";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import axios from "axios";
@@ -96,11 +96,11 @@ export default function Homepage(){
             <TypeAnimation
       sequence={[
        
-        'Next Level Platform Where Collaborate',
+        'Next Level Coding Platform Where Collaborate',
         1000, 
-        'Next Level Platform Where Code',
+        'Next Level Coding Platform Where Code',
         1000,
-        'Next Level Platform Where Create',
+        'Next Level Coding Platform Where Create',
         1000,
       ]}
       wrapper="span"

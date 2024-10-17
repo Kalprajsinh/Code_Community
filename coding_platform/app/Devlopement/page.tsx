@@ -46,7 +46,7 @@ const FileTree = ({ tree, onSelect }:any) => {
 
 
 const Terminal = () => {
-  const terminalRef = useRef();
+  const terminalRef = useRef<HTMLDivElement | null>(null); 
   const isRendered = useRef(false);
 
   useEffect(() => {
@@ -57,7 +57,9 @@ const Terminal = () => {
       rows: 20,
     });
 
-    term.open(terminalRef.current);
+    if (terminalRef.current) {
+      term.open(terminalRef.current);
+  }
 
     term.onData((data) => {
       socket.emit("terminal:write", data);
@@ -116,6 +118,8 @@ const getFileMode = ({ selectedFile }:any) => {
   }
 };
 
+import { useSession } from "next-auth/react";
+import axios from "axios";
 
 
 function App() {
@@ -125,6 +129,9 @@ function App() {
   const [code, setCode] = useState("");
 
   const isSaved = selectedFileContent === code;
+
+  const { data: session } = useSession();
+  const username = session?.user?.name;
 
   useEffect(() => {
     if (!isSaved && code) {
@@ -149,6 +156,12 @@ function App() {
   }, [selectedFileContent]);
 
   const getFileTree = async () => {
+    console.log("Username:", username);
+    const response2 = await axios.get('http://localhost:9000/dirname', {
+      params: {
+        dirname: username
+        }
+    });
     const response = await fetch("http://localhost:9000/files");
     const result = await response.json();
     console.log(result.tree);
@@ -185,7 +198,7 @@ function App() {
         <div className="toolbar-right flex gap-4">
           <button className="text-gray-400 hover:text-white" onClick={
             () => {
-              (path) => {
+              (path:any) => {
                 setSelectedFileContent('');
                 setSelectedFile(path);
                 setCode(selectedFileContent)
@@ -204,7 +217,7 @@ function App() {
         <div className="file-explorer w-1/6 bg-lightbg text-gray-300 p-4">
         EXPLORER
           <FileTree
-            onSelect={(path) => {
+            onSelect={(path:any) => {
               setSelectedFileContent('');
               setSelectedFile(path);
             }}
@@ -225,17 +238,10 @@ function App() {
               <Editor
                 width="100%"
                 height="calc(100% - 40px)"
-                mode={getFileMode({ selectedFile })}
                 language="javascript"
                 theme="vs-dark"
                 value={code}
-                onChange={(e) => setCode(e)}
-                fontSize={14}
-                setOptions={{
-                  enableBasicAutocompletion: true,
-                  enableLiveAutocompletion: true,
-                  enableSnippets: true
-                }}
+                onChange={(e) => setCode(e ?? "")}
               />
             ) : (
               <div className="text-gray-400 text-sm flex justify-center items-center h-full">

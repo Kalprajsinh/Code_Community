@@ -193,11 +193,9 @@ export default function Home() {
           // If user is authenticated, display user info and sign out button
           <div className="flex items-center gap-4">
             <img
-              src={session.user.image ?? "/default-avatar.png"} // Fallback to default avatar
-              width={32} // Adjust size as needed
-              height={32}
-              className="rounded-full"
-              alt="User profile"
+              src={session?.user?.image ?? ""} // Fallback to default avatar
+              className="w-10 h-10 rounded-full"
+              alt=""
             />
             <div className="flex flex-col">
               <span className="text-sky-600">{session.user.name}</span>
@@ -227,7 +225,7 @@ export default function Home() {
           <div className="p-2 flex gap-3 items-center border-b border-b-textcolor h-12">
             <a onClick={toggleDrawer} className="cursor-pointer text-vs">Users</a>
             <button
-              className="bg-lightbg text-white rounded-md text-textcolor w-1 h-4 text-vs font-bold md:w-6 md:h-6 md:text-sm"
+              className="bg-lightbg rounded-md text-textcolor w-1 h-4 text-vs font-bold md:w-6 md:h-6 md:text-sm"
               onClick={toggleDrawer}
               >
               &lt;-
@@ -265,7 +263,7 @@ export default function Home() {
                 {/* Add your drawer content here */}
                 <a onClick={toggleDrawer} className="cursor-pointer text-vs">Users</a>
                 <button
-                  className="text-white text-textcolor rounded-md w-1 h-4 text-vs font-bold md:w-6 md:h-6 md:text-sm flex pt-0.5"
+                  className="text-textcolor rounded-md w-1 h-4 text-vs font-bold md:w-6 md:h-6 md:text-sm flex pt-0.5"
                   onClick={toggleDrawer}
                 >
                   -&gt;

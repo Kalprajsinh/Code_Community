@@ -7,30 +7,23 @@ const cors = require('cors');
 const chokidar = require('chokidar');
 const pty = require('node-pty');
 
-// Initialize Express app and HTTP server
+
 const app = express();
 const server = http.createServer(app);
 
-// Initialize Socket.IO with CORS configuration
 const io = new SocketIO(server, {
     cors: {
         origin: '*',
     },
 });
 
-// Define the initial folder name
 let folderName = path.join(__dirname, 'user');
 let watcher = null;
 let ptyProcess = null;
 
-// Middleware
 app.use(cors());
-app.use(express.json()); // Parse JSON bodies
+app.use(express.json()); 
 
-/**
- * Route: GET /dirname
- * Description: Sets the directory name, creates it if it doesn't exist, and starts watching it.
- */
 app.get('/dirname', async (req, res) => {
     const { dirname } = req.query;
 
@@ -53,17 +46,16 @@ app.get('/dirname', async (req, res) => {
         }
     }
 
-    // Restart watcher and PTY with the new folder
+
     restartWatcher(folderName);
     restartPty(folderName);
 
     return res.status(200).json({ message: `Directory is ready: ${folderName}` });
 });
 
-/**
- * Route: GET /files
- * Description: Retrieves the file tree of the current directory.
- */
+
+
+
 app.get('/files', async (req, res) => {
     try {
         const fileTree = await generateFileTree(folderName);
@@ -74,10 +66,9 @@ app.get('/files', async (req, res) => {
     }
 });
 
-/**
- * Route: GET /files/content
- * Description: Retrieves the content of a specific file.
- */
+
+
+
 app.get('/files/content', async (req, res) => {
     const filePath = req.query.path;
 
@@ -96,18 +87,15 @@ app.get('/files/content', async (req, res) => {
     }
 });
 
-/**
- * Socket.IO Connection Handler
- */
+
+
 io.on('connection', (socket) => {
     console.log(`Socket connected: ${socket.id}`);
 
-    // Emit initial file refresh
+
     socket.emit('file:refresh');
 
-    /**
-     * Handle file changes from clients
-     */
+
     socket.on('file:change', async ({ path: filePath, content }) => {
         const absolutePath = path.join(folderName, filePath);
         try {
@@ -119,9 +107,7 @@ io.on('connection', (socket) => {
         }
     });
 
-    /**
-     * Handle terminal input from clients
-     */
+    
     socket.on('terminal:write', (data) => {
         if (ptyProcess) {
             ptyProcess.write(data);
@@ -133,27 +119,27 @@ io.on('connection', (socket) => {
     });
 });
 
-/**
- * Start the server
- */
+
+
 const PORT = 9000;
 server.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
-    // Initialize watcher and PTY on server start
+    
     restartWatcher(folderName);
     restartPty(folderName);
 });
 
-/**
- * Starts or restarts the file watcher for the specified directory.
- * @param {string} directory - The directory to watch.
- */
+
 function restartWatcher(directory) {
     if (watcher) {
         watcher.close();
     }
 
-    watcher = chokidar.watch(directory, { ignoreInitial: true });
+    watcher = chokidar.watch(directory, {
+        ignoreInitial: true,
+        ignored: /(^|[\/\\])node_modules([\/\\]|$)/, 
+        persistent: true,
+    });
 
     watcher.on('all', (event, filePath) => {
         console.log(`File ${event}: ${filePath}`);
@@ -164,13 +150,10 @@ function restartWatcher(directory) {
         console.error('Watcher error:', error);
     });
 
-    console.log(`Started watching directory: ${directory}`);
+    console.log(`Started watching directory: ${directory} (node_modules is ignored)`);
 }
 
-/**
- * Starts or restarts the PTY process for the specified directory.
- * @param {string} cwd - The current working directory for the PTY.
- */
+
 function restartPty(cwd) {
     if (ptyProcess) {
         ptyProcess.kill();
@@ -195,26 +178,37 @@ function restartPty(cwd) {
     console.log(`PTY process started in directory: ${cwd}`);
 }
 
-/**
- * Generates a file tree structure for the specified directory.
- * @param {string} directory - The root directory to generate the tree from.
- * @returns {Object} - The file tree.
- */
+
+
+const IGNORE_DIRS = ['node_modules']; // Directories to ignore
+
 async function generateFileTree(directory) {
     const tree = {};
 
     async function buildTree(currentDir, currentTree) {
-        const entries = await fs.readdir(currentDir, { withFileTypes: true });
-
-        for (const entry of entries) {
-            const entryPath = path.join(currentDir, entry.name);
-            if (entry.isDirectory()) {
-                currentTree[entry.name] = {};
-                await buildTree(entryPath, currentTree[entry.name]);
-            } else {
-                currentTree[entry.name] = null;
-            }
+        let entries;
+        try {
+            entries = await fs.readdir(currentDir, { withFileTypes: true });
+        } catch (err) {
+            console.error(`Error reading directory: ${currentDir}`, err);
+            return;
         }
+
+        const filteredEntries = entries.filter(
+            (entry) => !IGNORE_DIRS.includes(entry.name)
+        );
+
+        await Promise.all(
+            filteredEntries.map(async (entry) => {
+                const entryPath = path.join(currentDir, entry.name);
+                if (entry.isDirectory()) {
+                    currentTree[entry.name] = {};
+                    await buildTree(entryPath, currentTree[entry.name]);
+                } else {
+                    currentTree[entry.name] = null;
+                }
+            })
+        );
     }
 
     await buildTree(directory, tree);
