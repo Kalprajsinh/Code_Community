@@ -51,7 +51,7 @@ export default function Homepage(){
     if (session && session.user) {
       try {
         // Make GET request to /dirname endpoint with the dirname
-        const response = await axios.get('http://localhost:9000/dirname', {
+        const response = await axios.get('https://docker-x4tj.onrender.com/dirname', {
           params: {
             dirname: username
             }

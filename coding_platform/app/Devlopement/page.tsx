@@ -6,7 +6,7 @@ import { io } from 'socket.io-client'
 import { Terminal as XTerminal } from "@xterm/xterm";
 import "@xterm/xterm/css/xterm.css";
 
-const socket = io('http://localhost:9000')
+const socket = io('https://docker-x4tj.onrender.com')
 
 const FileTreeNode = ({ fileName, nodes, onSelect, path }:any) => {
   const isDir = !!nodes;
@@ -157,12 +157,12 @@ function App() {
 
   const getFileTree = async () => {
     console.log("Username:", username);
-    const response2 = await axios.get('http://localhost:9000/dirname', {
+    const response2 = await axios.get('https://docker-x4tj.onrender.com/dirname', {
       params: {
         dirname: username
         }
     });
-    const response = await fetch("http://localhost:9000/files");
+    const response = await fetch("https://docker-x4tj.onrender.com/files");
     const result = await response.json();
     console.log(result.tree);
     setFileTree(result.tree);
@@ -170,7 +170,7 @@ function App() {
   const getFileContents = useCallback(async () => {
     if (!selectedFile) return;
     const response = await fetch(
-      `http://localhost:9000/files/content?path=${selectedFile}`
+      `https://docker-x4tj.onrender.com/files/content?path=${selectedFile}`
     );
     const result = await response.json();
     setSelectedFileContent(result.content);
@@ -238,7 +238,7 @@ function App() {
               <Editor
                 width="100%"
                 height="calc(100% - 40px)"
-                language="javascript"
+                language={getFileMode({ selectedFile })}
                 theme="vs-dark"
                 value={code}
                 onChange={(e) => setCode(e ?? "")}
