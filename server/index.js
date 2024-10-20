@@ -7,13 +7,13 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: 'https://codev.vercel.app',
+    origin: 'https://codev-omega.vercel.app',
     methods: ['GET', 'POST']
   }
 });
 
 app.use(cors({
-  origin: 'https://codev.vercel.app'
+  origin: 'https://codev-omega.vercel.app'
 }));
 
 const rooms = {};
