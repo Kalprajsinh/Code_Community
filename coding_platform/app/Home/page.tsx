@@ -7,7 +7,7 @@ import Editor from "@monaco-editor/react";
 import axios from 'axios';
 import { useSession,signOut } from "next-auth/react";
 
-const socket = io('http://localhost:3001');
+const socket = io('https://code-community-ftp2.onrender.com');
 
 const helloWorldExamples = {
   python: 'print("Hello, World!")',
@@ -348,7 +348,7 @@ export default function Home() {
 // import axios from "axios";
 
 // // WebSocket connection
-// const socket = io("http://localhost:3001");
+// const socket = io("https://code-community-ftp2.onrender.com");
 
 // const helloWorldExamples = {
 //   python: 'print("Hello, World!")',
