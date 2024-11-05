@@ -8,15 +8,12 @@ const Header = () => {
   const { data: session } = useSession();
   const router = useRouter();
   return (
-    <div className="h-24 flex justify-between items-center w-full">
-      <div className="flex justify-center items-center gap-1 ml-4 text-2xl">
-        <FaCode /> CoDev
-      </div>
-      <div className="flex justify-center items-center gap-2 mr-4 text-xl">
+    <div className="h-24 flex justify-end items-center w-full">
+      <div className="flex justify-center items-center gap-2 mr-4 text-sm">
         {!session?.user ? (
           <>
             <button
-              className="w-20 h-10 p-2 text-textcolor text-sm"
+              className="w-20 h-10 p-2 text-[#7DD2FB] text-sm"
               onClick={() => {
                 router.push("/login");
               }}
@@ -24,7 +21,7 @@ const Header = () => {
               Login
             </button>
             <button
-              className="w-20 h-10 border p-2 bg-textcolor rounded-full text-black text-sm"
+              className="w-20 h-10 border p-2 bg-[#7DD2FB] rounded-full text-black text-xs"
               onClick={() => {
                 router.push("/signup");
               }}
@@ -34,21 +31,20 @@ const Header = () => {
           </>
         ) : (
           // If user is authenticated, display user info and sign out button
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <img
-              src={session.user.image ?? "/default-avatar.png"} // Fallback to default avatar
-              width={32} // Adjust size as needed
-              height={32}
-              className="rounded-full"
-              alt="User profile"
+              src={session.user.image ?? ""} // Fallback to default avatar
+              className="w-8 h-8 rounded-full"
             />
+            <div className="hidden lg:block">
             <div className="flex flex-col">
-              <span className="text-sky-600">{session.user.name}</span>
-              <span className="text-sky-600 text-sm">{session.user.email}</span>
+              <span className="text-sky-200">{session.user.name}</span>
+              <span className="text-sky-200 text-sm">{session.user.email}</span>
+            </div>
             </div>
             <button
               onClick={() => signOut()}
-              className="w-20 h-10 p-2 text-textcolor text-lg hover:text-white transition"
+              className="w-20 h-10 p-2 text-[#7DD2FB] text-lg hover:text-white transition underline"
             >
               Logout
             </button>

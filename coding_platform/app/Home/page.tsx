@@ -125,8 +125,8 @@ export default function Home() {
 
   if (!joined) {
     return (
-      <div className="w-full h-screen flex items-center justify-center bg-darkbg">
-        <div className="p-5 bg-lightbg rounded-lg">
+      <div className="w-full h-screen flex items-center justify-center bg-[#0F172A]">
+        <div className="p-5 bg-[#0E2D41] rounded-lg">
           <h2 className="text-white mb-4 text-2xl">Join a Room</h2>
           <form
             onSubmit={(e) => {
@@ -140,7 +140,7 @@ export default function Home() {
               placeholder="Room ID"
               value={room}
               onChange={(e) => setRoom(e.target.value)}
-              className="p-2 rounded-md text-darkbg"
+              className="p-2 rounded-md text-[#0F172A]"
               required
             />
             <input
@@ -148,7 +148,7 @@ export default function Home() {
               placeholder="Username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="p-2 rounded-md text-darkbg"
+              className="p-2 rounded-md text-[#0F172A]"
               required
             />
             <button
@@ -164,8 +164,8 @@ export default function Home() {
   }
 
   return (
-    <div className="w-full h-screen bg-darkbg overflow-hidden">
-      <div className="w-full h-20 border-b-2 border-b-textcolor text-2xl flex items-center p-5 justify-between">
+    <div className="w-full h-screen bg-[#0F172A] overflow-hidden">
+      <div className="w-full h-20 border-b-2 border-b-[#7DD2FB] text-2xl flex items-center p-5 justify-between">
         <div className="font-bold">
           &lt;/&gt;&nbsp;Compiler
         </div>
@@ -173,7 +173,7 @@ export default function Home() {
         {!session?.user ? (
           <>
             <button
-              className="w-20 h-10 p-2 text-textcolor text-sm"
+              className="w-20 h-10 p-2 text-[#7DD2FB] text-sm"
               onClick={() => {
                 router.push("/login");
               }}
@@ -181,7 +181,7 @@ export default function Home() {
               Login
             </button>
             <button
-              className="w-20 h-10 border p-2 bg-textcolor rounded-full text-black text-sm"
+              className="w-20 h-10 border p-2 bg-[#7DD2FB] rounded-full text-black text-sm"
               onClick={() => {
                 router.push("/signup");
               }}
@@ -198,8 +198,8 @@ export default function Home() {
               alt=""
             />
             <div className="flex flex-col">
-              <span className="text-sky-600">{session.user.name}</span>
-              <span className="text-sky-600 text-sm">{session.user.email}</span>
+              <span className="text-sky-100">{session.user.name}</span>
+              <span className="text-sky-100 text-sm">{session.user.email}</span>
             </div>
             <button
               onClick={() => {signOut()
@@ -207,7 +207,7 @@ export default function Home() {
               }
                 
               }
-              className="w-20 h-10 p-2 text-textcolor text-lg hover:text-white transition"
+              className="w-20 h-10 p-2 text-[#7DD2FB] text-lg hover:text-white transition"
             >
               Logout
             </button>
@@ -220,12 +220,12 @@ export default function Home() {
         <div
           className={`${
             isDrawerOpen ? "block" : "hidden"
-          } fixed md:relative w-1/6 border-r border-textcolor h-screen bg-lightbg md:bg-transparent`}
+          } fixed md:relative w-1/6 border-r border-[#7DD2FB] h-screen bg-[#0E2D41] md:bg-transparent`}
         >
-          <div className="p-2 flex gap-3 items-center border-b border-b-textcolor h-12">
+          <div className="p-2 flex gap-3 items-center border-b border-b-[#7DD2FB] h-12">
             <a onClick={toggleDrawer} className="cursor-pointer text-vs">Users</a>
             <button
-              className="bg-lightbg rounded-md text-textcolor w-1 h-4 text-vs font-bold md:w-6 md:h-6 md:text-sm"
+              className="bg-[#0E2D41] rounded-md text-[#7DD2FB] w-1 h-4 text-vs font-bold md:w-6 md:h-6 md:text-sm"
               onClick={toggleDrawer}
               >
               &lt;-
@@ -235,7 +235,7 @@ export default function Home() {
           <ul className="grid grid-cols-1 md:grid-cols-2">
             {users.map((user) => (
               <li key={user.id} className="flex justify-center items-center font-bold mb-3">
-                <div className="bg-darkbg w-12 text-sm xl:w-28 xl:h-16 h-12 xl:text-base rounded-xl flex justify-center items-center">
+                <div className="bg-[#0F172A] w-12 text-sm xl:w-28 xl:h-16 h-12 xl:text-base rounded-xl flex justify-center items-center">
                   {user.username}
                 </div>
               </li>
@@ -253,17 +253,17 @@ export default function Home() {
         <div
           className={`${
             isDrawerOpen ? "w-5/6" : "w-full"
-          } border-r border-textcolor h-screen flex ml-auto`}
+          } border-r border-[#7DD2FB] h-screen flex ml-auto`}
         >
-          <div className="w-2/3 border-r border-textcolor h-screen">
-            <div className="border-b border-b-textcolor h-12 flex">
+          <div className="w-2/3 border-r border-[#7DD2FB] h-screen">
+            <div className="border-b border-b-[#7DD2FB] h-12 flex">
               <div className={`${
                 isDrawerOpen ? "hidden" : ""
               } p-2 flex gap-3 items-center h-12`}>
                 {/* Add your drawer content here */}
                 <a onClick={toggleDrawer} className="cursor-pointer text-vs">Users</a>
                 <button
-                  className="text-textcolor rounded-md w-1 h-4 text-vs font-bold md:w-6 md:h-6 md:text-sm flex pt-0.5"
+                  className="text-[#7DD2FB] rounded-md w-1 h-4 text-vs font-bold md:w-6 md:h-6 md:text-sm flex pt-0.5"
                   onClick={toggleDrawer}
                 >
                   -&gt;
@@ -272,12 +272,12 @@ export default function Home() {
               <div className="flex justify-between w-full">
                 <div className="flex">
                   {/* <button
-                    className="bg-darkbg text-white py-2 px-5 rounded-md w-16 h-8 text-base font-bold flex justify-center items-center m-2 md:block hidden"
+                    className="bg-[#0F172A] text-white py-2 px-5 rounded-md w-16 h-8 text-base font-bold flex justify-center items-center m-2 md:block hidden"
                   >
                     📂
                   </button>
                   <button
-                    className="bg-lightbg text-white py-2 px-5 rounded-md w-16 h-8 text-base font-bold hover:bg-textcolor hover:text-darkbg flex justify-center items-center m-2 md:block hidden"
+                    className="bg-[#0E2D41] text-white py-2 px-5 rounded-md w-16 h-8 text-base font-bold hover:bg-[#7DD2FB] hover:text-[#0F172A] flex justify-center items-center m-2 md:block hidden"
                   >
                     
                   </button> */}
@@ -289,14 +289,14 @@ export default function Home() {
           
                 <div className="flex items-center gap-2">
                 <button
-                    className="bg-lightbg text-white py-2 px-5 rounded-md hover:bg-textcolor hover:text-darkbg h-8 text-base font-bold flex justify-center items-center m-2"
+                    className="bg-[#0E2D41] text-white py-2 px-5 rounded-md hover:bg-[#7DD2FB] hover:text-[#0F172A] h-8 text-base font-bold flex justify-center items-center m-2"
                     onClick={compileCode}
                     disabled={isLoading}
                   >
                     {isLoading ? 'Compiling...' : 'RUN'}
                   </button>
                   <select
-                    className="px-2 py-1 rounded-lg bg-gray-600 text-white bg-lightbg"
+                    className="px-2 py-1 rounded-lg bg-gray-600 text-white bg-[#0E2D41]"
                     value={language}
                     onChange={handleLanguageChange}
                   >
@@ -323,8 +323,8 @@ export default function Home() {
               />
             </div>
           </div>
-          <div className="w-1/3 border-r border-textcolor h-screen">
-            <div className="border-b border-b-textcolor h-12 flex items-center px-2 text-white justify-center">
+          <div className="w-1/3 border-r border-[#7DD2FB] h-screen">
+            <div className="border-b border-b-[#7DD2FB] h-12 flex items-center px-2 text-white justify-center">
               &gt;_ output 
             </div>
             <div className="p-4 text-white">
@@ -512,8 +512,8 @@ export default function Home() {
 
 //   if (!joined) {
 //     return (
-//       <div className="w-full h-screen flex items-center justify-center bg-darkbg">
-//         <div className="p-5 bg-lightbg rounded-lg">
+//       <div className="w-full h-screen flex items-center justify-center bg-[#0F172A]">
+//         <div className="p-5 bg-[#0E2D41] rounded-lg">
 //           <h2 className="text-white mb-4 text-2xl">Join a Room</h2>
 //           <form
 //             onSubmit={(e) => {
@@ -527,7 +527,7 @@ export default function Home() {
 //               placeholder="Room ID"
 //               value={room}
 //               onChange={(e) => setRoom(e.target.value)}
-//               className="p-2 rounded-md text-darkbg"
+//               className="p-2 rounded-md text-[#0F172A]"
 //               required
 //             />
 //             <input
@@ -535,7 +535,7 @@ export default function Home() {
 //               placeholder="Username"
 //               value={username}
 //               onChange={(e) => setUsername(e.target.value)}
-//               className="p-2 rounded-md text-darkbg"
+//               className="p-2 rounded-md text-[#0F172A]"
 //               required
 //             />
 //             <button
@@ -551,18 +551,18 @@ export default function Home() {
 //   }
 
 //   return (
-//     <div className="w-full h-screen bg-darkbg overflow-hidden">
-//       <div className="w-full h-20 border-b-2 border-b-textcolor text-2xl flex items-center p-5 justify-between">
+//     <div className="w-full h-screen bg-[#0F172A] overflow-hidden">
+//       <div className="w-full h-20 border-b-2 border-b-[#7DD2FB] text-2xl flex items-center p-5 justify-between">
 //         <div className="font-bold">&lt;/&gt;&nbsp;Compiler</div>
 //         <div className="flex gap-3">
 //           <button
-//             className="bg-lightbg text-white py-2 px-5 rounded-md hover:bg-textcolor hover:text-darkbg w-20 h-10 text-base font-bold"
+//             className="bg-[#0E2D41] text-white py-2 px-5 rounded-md hover:bg-[#7DD2FB] hover:text-[#0F172A] w-20 h-10 text-base font-bold"
 //             onClick={() => router.push("/signup", { scroll: false })}
 //           >
 //             Signup
 //           </button>
 //           <button
-//             className="bg-lightbg text-white py-2 px-5 rounded-md hover:bg-textcolor hover:text-darkbg w-20 h-10 text-base font-bold"
+//             className="bg-[#0E2D41] text-white py-2 px-5 rounded-md hover:bg-[#7DD2FB] hover:text-[#0F172A] w-20 h-10 text-base font-bold"
 //             onClick={() => router.push("/login", { scroll: false })}
 //           >
 //             Login
@@ -575,14 +575,14 @@ export default function Home() {
 //         <div
 //           className={`${
 //             isDrawerOpen ? "block" : "hidden"
-//           } fixed md:relative w-1/6 border-r border-textcolor h-screen bg-lightbg md:bg-transparent`}
+//           } fixed md:relative w-1/6 border-r border-[#7DD2FB] h-screen bg-[#0E2D41] md:bg-transparent`}
 //         >
-//           <div className="p-2 flex gap-3 items-center border-b border-b-textcolor h-12">
+//           <div className="p-2 flex gap-3 items-center border-b border-b-[#7DD2FB] h-12">
 //             <a onClick={toggleDrawer} className="cursor-pointer text-vs">
 //               Users
 //             </a>
 //             <button
-//               className="bg-lightbg text-white rounded-md text-textcolor w-1 h-4 text-vs font-bold md:w-6 md:h-6 md:text-sm"
+//               className="bg-[#0E2D41] text-white rounded-md text-[#7DD2FB] w-1 h-4 text-vs font-bold md:w-6 md:h-6 md:text-sm"
 //               onClick={toggleDrawer}
 //             >
 //               &lt;-
@@ -595,14 +595,14 @@ export default function Home() {
 //                 key={user.id}
 //                 className="flex justify-center items-center font-bold mb-3"
 //               >
-//                 <div className="bg-darkbg w-12 text-sm xl:w-28 xl:h-16 h-12 xl:text-base rounded-xl flex justify-center items-center">
+//                 <div className="bg-[#0F172A] w-12 text-sm xl:w-28 xl:h-16 h-12 xl:text-base rounded-xl flex justify-center items-center">
 //                   {user.username}
 //                 </div>
 //               </li>
 //             ))}
 //           </ul>
 //           <button
-//             className="bg-lightbg text-white py-2 px-5 rounded-md"
+//             className="bg-[#0E2D41] text-white py-2 px-5 rounded-md"
 //             onClick={startLocalStream}
 //           >
 //             Start Video Call
@@ -623,10 +623,10 @@ export default function Home() {
 //         <div
 //           className={`${
 //             isDrawerOpen ? "w-5/6" : "w-full"
-//           } border-r border-textcolor h-screen flex ml-auto`}
+//           } border-r border-[#7DD2FB] h-screen flex ml-auto`}
 //         >
-//           <div className="w-2/3 border-r border-textcolor h-screen">
-//             <div className="border-b border-b-textcolor h-12 flex">
+//           <div className="w-2/3 border-r border-[#7DD2FB] h-screen">
+//             <div className="border-b border-b-[#7DD2FB] h-12 flex">
 //               <div
 //                 className={`${isDrawerOpen ? "hidden" : ""} p-2 flex gap-3 items-center h-12`}
 //               >
@@ -634,7 +634,7 @@ export default function Home() {
 //                   Users
 //                 </a>
 //                 <button
-//                   className="text-white text-textcolor rounded-md w-1 h-4 text-vs font-bold md:w-6 md:h-6 md:text-sm flex pt-0.5"
+//                   className="text-white text-[#7DD2FB] rounded-md w-1 h-4 text-vs font-bold md:w-6 md:h-6 md:text-sm flex pt-0.5"
 //                   onClick={toggleDrawer}
 //                 >
 //                   -&gt;
@@ -649,14 +649,14 @@ export default function Home() {
 
 //                 <div className="flex items-center gap-2">
 //                   <button
-//                     className="bg-lightbg text-white py-2 px-5 rounded-md hover:bg-textcolor hover:text-darkbg h-8 text-base font-bold flex justify-center items-center m-2"
+//                     className="bg-[#0E2D41] text-white py-2 px-5 rounded-md hover:bg-[#7DD2FB] hover:text-[#0F172A] h-8 text-base font-bold flex justify-center items-center m-2"
 //                     onClick={compileCode}
 //                     disabled={isLoading}
 //                   >
 //                     {isLoading ? "Compiling..." : "RUN"}
 //                   </button>
 //                   <select
-//                     className="px-2 py-1 rounded-lg bg-gray-600 text-white bg-lightbg"
+//                     className="px-2 py-1 rounded-lg bg-gray-600 text-white bg-[#0E2D41]"
 //                     value={language}
 //                     onChange={handleLanguageChange}
 //                   >
@@ -683,8 +683,8 @@ export default function Home() {
 //               />
 //             </div>
 //           </div>
-//           <div className="w-1/3 border-r border-textcolor h-screen">
-//             <div className="border-b border-b-textcolor h-12 flex items-center px-2 text-white justify-center">
+//           <div className="w-1/3 border-r border-[#7DD2FB] h-screen">
+//             <div className="border-b border-b-[#7DD2FB] h-12 flex items-center px-2 text-white justify-center">
 //               &gt;_ output
 //             </div>
 //             <div className="p-4 text-white">

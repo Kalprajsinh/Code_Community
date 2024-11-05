@@ -214,7 +214,7 @@ function App() {
       {/* Main Editor Area */}
       <div className="editor-area flex flex-grow">
         {/* Sidebar File Explorer */}
-        <div className="file-explorer w-1/6 bg-lightbg text-gray-300 p-4">
+        <div className="file-explorer w-1/6 bg-[#0E2D41] text-gray-300 p-4">
         EXPLORER
           <FileTree
             onSelect={(path:any) => {

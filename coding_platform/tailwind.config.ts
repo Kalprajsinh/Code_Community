@@ -14,15 +14,14 @@ const config: Config = {
     //   lg: ['20px', '28px'],
     //   xl: ['24px', '32px'],
     // },
-    colors: {
-      'darkbg': '#0F172A',
-      'lightbg': '#0E2D41',
-      'textcolor': '#7DD2FB',
-      'black': '#000000',
-      'white': '#FFFFFF',
-      'red': '#e74c3c',
-
-    },
+    // colors: {
+    //   'darkbg': '#0F172A',
+    //   'lightbg': '#0E2D41',
+    //   'textcolor': '#7DD2FB',
+    //   'black': '#000000',
+    //   'white': '#FFFFFF',
+    //   'red': '#e74c3c',
+    // },
     extend: {
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
