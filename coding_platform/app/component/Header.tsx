@@ -1,24 +1,32 @@
 "use client";
 
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const Header = () => {
+  const [user, setUser] = useState<{ name: string; email: string; image?: string } | null>(null);
+  const { data: session } = useSession();
   const router = useRouter();
-  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
 
   useEffect(() => {
-   
+    // Check if user info is stored in localStorage
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
-      console.log(user)
     }
-  }, []);
+    // Set user data from session if available
+    if (session?.user) {
+      setUser({
+        name: session.user.name || "",
+        email: session.user.email || "",
+        image: session.user.image || ""
+      });
+    }
+  }, [session]);
 
   const handleSignOut = () => {
-    
+    // Clear localStorage on sign out
     localStorage.removeItem("user");
     signOut();
   };
@@ -42,8 +50,12 @@ const Header = () => {
             </button>
           </>
         ) : (
-          
+          // If user is authenticated, display user info and sign out button
           <div className="flex items-center gap-3">
+            <img
+              src={user.image || "user.png"}
+              className="w-8 h-8 rounded-full mt-1 lg:mt-0"
+            />
             <div className="hidden lg:block">
               <div className="flex flex-col">
                 <span className="text-sky-200">{user.name}</span>
