@@ -1,49 +1,57 @@
 "use client";
 
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { FaCode } from "react-icons/fa";
+import { useEffect, useState } from "react";
 
 const Header = () => {
-  const { data: session } = useSession();
   const router = useRouter();
+  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+
+  useEffect(() => {
+   
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+      console.log(user)
+    }
+  }, []);
+
+  const handleSignOut = () => {
+    
+    localStorage.removeItem("user");
+    signOut();
+  };
+
   return (
     <div className="h-24 flex justify-end items-center w-full">
       <div className="flex justify-center items-center gap-2 mr-4 text-sm">
-        {!session?.user ? (
+        {!user ? (
           <>
             <button
               className="w-20 h-10 p-2 text-[#7DD2FB] text-sm"
-              onClick={() => {
-                router.push("/login");
-              }}
+              onClick={() => router.push("/login")}
             >
               Login
             </button>
             <button
               className="w-20 h-10 border p-2 bg-[#7DD2FB] rounded-full text-black text-xs"
-              onClick={() => {
-                router.push("/signup");
-              }}
+              onClick={() => router.push("/signup")}
             >
               SignUp
             </button>
           </>
         ) : (
-          // If user is authenticated, display user info and sign out button
+          
           <div className="flex items-center gap-3">
-            <img
-              src={session.user.image ?? ""} // Fallback to default avatar
-              className="w-8 h-8 rounded-full"
-            />
             <div className="hidden lg:block">
-            <div className="flex flex-col">
-              <span className="text-sky-200">{session.user.name}</span>
-              <span className="text-sky-200 text-sm">{session.user.email}</span>
-            </div>
+              <div className="flex flex-col">
+                <span className="text-sky-200">{user.name}</span>
+                <span className="text-sky-200 text-sm">{user.email}</span>
+              </div>
             </div>
             <button
-              onClick={() => signOut()}
+              onClick={handleSignOut}
               className="w-20 h-10 p-2 text-[#7DD2FB] text-lg hover:text-white transition underline"
             >
               Logout

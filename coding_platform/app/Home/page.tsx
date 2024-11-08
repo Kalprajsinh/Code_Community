@@ -6,6 +6,7 @@ import io from 'socket.io-client';
 import Editor from "@monaco-editor/react";
 import axios from 'axios';
 import { useSession,signOut } from "next-auth/react";
+import Header from "../component/Header";
 
 const socket = io('https://code-community-ftp2.onrender.com');
 
@@ -169,7 +170,8 @@ export default function Home() {
         <div className="font-bold">
           &lt;/&gt;&nbsp;Compiler
         </div>
-        <div className="flex justify-center items-center gap-2 mr-4 text-xl">
+        <Header />
+        {/* <div className="flex justify-center items-center gap-2 mr-4 text-xl">
         {!session?.user ? (
           <>
             <button
@@ -213,7 +215,7 @@ export default function Home() {
             </button>
           </div>
         )}
-      </div>
+      </div> */}
       </div>
 
       <div className="w-full h-screen flex">
@@ -296,7 +298,7 @@ export default function Home() {
                     {isLoading ? 'Compiling...' : 'RUN'}
                   </button>
                   <select
-                    className="px-2 py-1 rounded-lg bg-gray-600 text-white bg-[#0E2D41]"
+                    className="px-2 py-1 rounded-lg text-white bg-[#0E2D41]"
                     value={language}
                     onChange={handleLanguageChange}
                   >

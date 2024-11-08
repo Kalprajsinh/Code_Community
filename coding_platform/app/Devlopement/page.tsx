@@ -190,8 +190,8 @@ function App() {
 
   return (
     <div className="playground-container h-screen flex flex-col overflow-hidden">
-      {/* Toolbar */}
-      <div className="toolbar bg-darkbg text-white p-2 flex justify-between items-center">
+    
+      <div className="toolbar bg-[#0F172A] text-white p-2 flex justify-between items-center">
         <div className="toolbar-left flex items-center gap-4">
           <span className="text-blue-400">●</span> CoDev Virtual Container
         </div>
@@ -224,8 +224,8 @@ function App() {
             tree={fileTree}
           />
         </div>
-        {/* Code Editor */}
-        <div className="editor flex-grow bg-darkbg text-white relative">
+        
+        <div className="editor flex-grow bg-[#0F172A] text-white relative">
           <div className="editor-header bg-gray-800 text-gray-300 p-2 flex justify-between items-center">
             {selectedFile && (
               <p className="text-sm">

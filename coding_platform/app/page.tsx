@@ -32,21 +32,21 @@ const technologies = [
 const technologies2 = [
   { src: "3.png", initialX: 8, initialY: 10 },
   { src: "4.png", initialX: 25, initialY: 15 },
-  { src: "1.png", initialX: 12, initialY: 25 },
-  { src: "2.png", initialX: 40, initialY: 30 },
+  { src: "11.png", initialX: 12, initialY: 25 },
+  { src: "12.png", initialX: 40, initialY: 30 },
   { src: "5.png", initialX: 8, initialY: 60 },
   { src: "6.png", initialX: 15, initialY: 70 },
   { src: "7.png", initialX: 28, initialY: 88 },
   { src: "15.png", initialX: 8, initialY: 82 },
   { src: "14.png", initialX: 66, initialY: 10 },
-  { src: "9.png", initialX: 80, initialY: 17 },
+  { src: "13.png", initialX: 80, initialY: 17 },
   { src: "8.png", initialX: 87, initialY: 29 },
   { src: "16.png", initialX: 65, initialY: 25 },
   { src: "10.png", initialX: 83, initialY: 65 },
   { src: "17.png", initialX: 90, initialY: 75 },
-  { src: "11.png", initialX: 65, initialY: 70 },
-  { src: "12.png", initialX: 50, initialY: 78 },
-  { src: "13.png", initialX: 68, initialY: 89 },
+  { src: "1.png", initialX: 65, initialY: 70 },
+  { src: "2.png", initialX: 50, initialY: 78 },
+  { src: "9.png", initialX: 68, initialY: 89 },
 ]
 
 export default function Component() {
@@ -70,7 +70,8 @@ export default function Component() {
   const [showAlert, setShowAlert] = useState(false);
 
   const handleClick = () => {
-    if (session && session.user) {
+    const storedUser = localStorage.getItem("user");
+    if ((session && session.user) || storedUser) {
       console.log(session);
       router.push('/Home');
     } else {
@@ -84,9 +85,9 @@ export default function Component() {
   const username = session?.user?.name;
 
   const handleClick2 = async () => {
-    if (session && session.user) {
+    const storedUser = localStorage.getItem("user");
+    if ((session && session.user) || storedUser) {
       try {
-        // Make GET request to /dirname endpoint with the dirname
         const response = await axios.get('https://docker-x4tj.onrender.com/dirname', {
           params: {
             dirname: username
@@ -107,11 +108,11 @@ export default function Component() {
 
   useEffect(() => {
     technologies.forEach((tech, index) => {
-      const delay = 0.2; // slight stagger for each icon
+      const delay = 0.2; 
   
       gsap.fromTo(
         `.icon-${index}`,
-        { opacity: 0 }, // start off-screen (left or right)
+        { opacity: 0 }, 
         {
           opacity: 1,
           duration: 1,
@@ -157,7 +158,6 @@ export default function Component() {
         </div>
       </nav>
 
-      {/* Floating background icons */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none hidden md:block">
   {technologies.map(({ src, initialX, initialY }, index) => (
     <div
@@ -214,15 +214,16 @@ export default function Component() {
       />
         </p>
         
-        <button className="relative group bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 text-lg rounded-full">
+        <button onClick={handleClick2} className="relative group bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 text-lg rounded-full">
           <span className="relative z-10">Get Started</span>
           <div className="absolute inset-0 rounded-full bg-blue-400 blur-lg group-hover:blur-xl transition-all duration-300 opacity-50"></div>
         </button>
       </div>
 
       {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-gray-900 pointer-events-none hidden md:block"></div>
-      <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-gray-900 pointer-events-none block md:hidden"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-[#00000014] via-transparent to-gray-900 pointer-events-none"></div>
+      {/* <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-gray-900 pointer-events-none hidden md:block"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-gray-900 pointer-events-none block md:hidden"></div> */}
 
       </div>
       <div className="w-full h-auto flex flex-col justify-center items-center bg-gray-900 bg-opacity-50 text-center p-10">
@@ -244,7 +245,7 @@ export default function Component() {
         </div>
         {showAlert && (
         <div
-          className="flex items-center p-4 mb-4 text-sm text-red rounded-lg bg-red-50 z-20 fixed top-0 border"
+          className="flex items-center p-4 mb-4 text-sm text-red rounded-lg bg-red-500 z-20 fixed top-20 border"
           role="alert"
         >
           <svg
@@ -258,11 +259,11 @@ export default function Component() {
           </svg>
           <span className="sr-only">Info</span>
           <div>
-            <span className="font-medium">Danger alert!</span> You need to be logged in to continue.
+            <span className="font-medium">You need to be logged in to continue.</span> 
           </div>
         </div>
       )}
-        {/* Development Card */}
+        
         <div className="bg-gray-800 rounded-lg p-8 shadow-lg hover:shadow-purple-500/30 transition-shadow transform duration-300">
           <div className="flex items-center justify-center w-14 h-14 rounded-full bg-purple-500 mb-4">
             <FaCogs className="text-white text-3xl" />
@@ -281,7 +282,7 @@ export default function Component() {
     <section className="w-full py-16 bg-gray-900 bg-opacity-50 text-white">
   <div className="max-w-7xl mx-auto px-4">
     
-    {/* Heading Section */}
+   
     <div className="text-center mb-12">
       <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
         Unleash Your Coding Potential
@@ -291,7 +292,6 @@ export default function Component() {
       </p>
     </div>
 
-    {/* Features Grid */}
     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
       {[
         { title: 'Real-time Collaboration', icon: FaLaptopCode, text: 'Collaborate with developers in real-time, enhancing productivity and teamwork.' },
@@ -313,10 +313,7 @@ export default function Component() {
     </div>
   </div>
 </section>
-
-
-
-        </div>
+</div>
   )
 }
 

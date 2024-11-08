@@ -9,18 +9,23 @@ async function getClient() {
 
 
 export async function POST(req: NextRequest) {
-    const body = await req.json();
-    const email = body.email;
-    const password = body.password;
+    const { email, password } = await req.json();
     const client = await getClient();
-    const insertUserText = 'SELECT FROM users WHERE email=$1 AND password=$2';
-    const userValues = [email,password];
+    const selectUserText = 'SELECT * FROM users WHERE email=$1 AND password=$2';
+    const userValues = [email, password];
 
-    let response = await client.query(insertUserText, userValues);
-    console.log("login");
-
-    return NextResponse.json({ name: body.name })
+    const response = await client.query(selectUserText, userValues);
+    if (response.rowCount) {
+        if(response.rowCount > 0)
+        {
+            const { name, email } = response.rows[0];
+            return NextResponse.json({ name,email }, { status: 201 });
+        }
+    } else {
+        return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+    }
 }
+
 
 
 

@@ -6,6 +6,7 @@ import { signIn,useSession } from "next-auth/react";
 import { FaApple, FaGoogle, FaGithub, FaFacebook } from "react-icons/fa";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -13,15 +14,25 @@ const LoginPage: React.FC = () => {
   const router = useRouter();
   const { data: session } = useSession();
 
-  const handleEmailLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    router.push("/");
-  };
-
   if (session && session.user) {
     console.log(session)
     router.push("/");
   }
+
+  const handleEmailLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+        const response = await axios.post("/api/login", { email, password });
+        if (response.status === 201) {
+            localStorage.setItem("user", JSON.stringify({ email }));  
+            router.push("/");  
+        }
+    } catch (error) {
+        console.error("Login failed:", error);
+    }
+};
+
+
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-black bg-opacity-60">
@@ -30,14 +41,14 @@ const LoginPage: React.FC = () => {
         muted
         loop
         className="fixed top-0 left-0 w-full h-full object-cover -z-20"
-      >
+        >
         <source src="/bg.mp4" type="video/mp4" />
       </video>
       <div className="flex-1 flex flex-col justify-center items-center p-8 shadow-lg">
         <h2 className="text-3xl font-bold mb-6 text-blue-600">Login to CoDev</h2>
         <form className="w-full max-w-md" onSubmit={handleEmailLogin}>
           <div className="mb-4">
-            <label htmlFor="email" className="block text-gray-700 mb-2">
+            <label htmlFor="email" className="block text-gray-100 mb-2">
               Email Address
             </label>
             <input
@@ -46,12 +57,12 @@ const LoginPage: React.FC = () => {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-gray-300 bg-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="you@example.com"
             />
           </div>
           <div className="mb-6">
-            <label htmlFor="password" className="block text-gray-700 mb-2">
+            <label htmlFor="password" className="block text-gray-100 mb-2">
               Password
             </label>
             <input
@@ -60,7 +71,7 @@ const LoginPage: React.FC = () => {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="********"
             />
           </div>
@@ -80,12 +91,12 @@ const LoginPage: React.FC = () => {
       </div>
 
       {/* Right Side: Social Authentication */}
-      <div className="flex-1 flex flex-col justify-center items-center bg-gray-100 p-8 shadow-lg">
+      <div className="flex-1 flex flex-col justify-center items-center p-8 shadow-lg">
         <h2 className="text-3xl font-bold mb-6 text-blue-600">Or continue with</h2>
         <div className="flex flex-col space-y-4 w-full max-w-md">
           <button
             onClick={() => signIn("google")}
-            className="flex items-center justify-center border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-200 transition duration-200"
+            className="flex items-center justify-center border border-gray-300 px-4 py-2 rounded-lg hover:text-sky-400 transition duration-200"
           >
             <img
           src="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png"
@@ -96,21 +107,21 @@ const LoginPage: React.FC = () => {
           </button>
           <button
             onClick={() => signIn("github")}
-            className="flex items-center justify-center border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-200 transition duration-200"
+            className="flex items-center justify-center border border-gray-300 px-4 py-2 rounded-lg hover:text-sky-400 transition duration-200"
           >
-            <FaGithub className="mr-2 text-xl text-gray-800" />
+            <FaGithub className="mr-2 text-xl text-white" />
             Continue with GitHub
           </button>
           <button
             onClick={() => signIn("apple")}
-            className="flex items-center justify-center border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-200 transition duration-200"
+            className="flex items-center justify-center border border-gray-300 px-4 py-2 rounded-lg hover:text-sky-400 transition duration-200"
           >
             <FaApple className="mr-2 text-xl text-white" />
             Continue with Apple
           </button>
           <button
             onClick={() => signIn("facebook")}
-            className="flex items-center justify-center border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-200 transition duration-200"
+            className="flex items-center justify-center border border-gray-300 px-4 py-2 rounded-lg hover:text-sky-400 transition duration-200"
           >
             <FaFacebook className="mr-2 text-xl text-white" />
             Continue with Apple
