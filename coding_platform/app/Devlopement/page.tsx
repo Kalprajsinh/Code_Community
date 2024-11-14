@@ -127,11 +127,21 @@ function App() {
   const [selectedFile, setSelectedFile] = useState("");
   const [selectedFileContent, setSelectedFileContent] = useState("");
   const [code, setCode] = useState("");
+  const [username, setusername] = useState("");
 
   const isSaved = selectedFileContent === code;
 
   const { data: session } = useSession();
-  const username = session?.user?.name;
+  const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const username = JSON.parse(storedUser);
+      setusername(username);
+    }
+    else{
+      const username1 = session?.user?.name;
+      if(username1)
+      setusername(username1)
+    }
 
   useEffect(() => {
     if (!isSaved && code) {

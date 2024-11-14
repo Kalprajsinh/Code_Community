@@ -9,6 +9,7 @@ import { useState,useEffect } from "react";
 import axios from "axios";
 import Link from "next/link"
 import { gsap } from "gsap";
+import { json } from "stream/consumers";
 
 const technologies = [
   { src: "3.png", initialX: 8, initialY: 10 },
@@ -86,8 +87,23 @@ export default function Component() {
 
   const handleClick2 = async () => {
     const storedUser = localStorage.getItem("user");
-    if ((session && session.user) || storedUser) {
+    if (storedUser) {
+      const storeduserinfo = JSON.parse(storedUser);
       try {
+        const response = await axios.get('https://docker-x4tj.onrender.com/dirname', {
+          params: {
+            dirname: storeduserinfo.email
+            }
+        });
+    } catch (err) {
+        console.error('Error:', err);
+    }
+      console.log(session);
+      router.push('/Devlopement');
+    }
+    else
+    if ((session && session.user)) {
+    try {
         const response = await axios.get('https://docker-x4tj.onrender.com/dirname', {
           params: {
             dirname: username

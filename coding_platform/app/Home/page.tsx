@@ -96,9 +96,9 @@ export default function Home() {
   const compileCode = async () => {
     const options = {
       method: 'POST',
-      url: 'https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=false&wait=true',
+      url: process.env.APIURL,
       headers: {
-        'x-rapidapi-key': '6129d442d1mshc5b312e0de8c457p183411jsn6a0870a6274a',
+        'x-rapidapi-key': process.env.APIKEY,
         'x-rapidapi-host': 'judge0-ce.p.rapidapi.com',
         'Content-Type': 'application/json'
       },
