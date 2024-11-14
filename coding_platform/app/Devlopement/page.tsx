@@ -132,7 +132,9 @@ function App() {
   const isSaved = selectedFileContent === code;
 
   const { data: session } = useSession();
-  const storedUser = localStorage.getItem("user");
+
+  useEffect(()=>{
+    const storedUser = localStorage.getItem("user");
     if (storedUser) {
       const username = JSON.parse(storedUser);
       setusername(username);
@@ -142,6 +144,7 @@ function App() {
       if(username1)
       setusername(username1)
     }
+  },[])
 
   useEffect(() => {
     if (!isSaved && code) {
