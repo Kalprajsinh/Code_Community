@@ -131,7 +131,8 @@ function App() {
   const isSaved = selectedFileContent === code;
 
   const { data: session } = useSession();
-  let username;
+  let username:any;
+  useEffect(()=>{
   const storedUser = localStorage.getItem("user");
     if (storedUser) {
       username = JSON.parse(storedUser).email;
@@ -141,7 +142,7 @@ function App() {
       username = session?.user?.name;
       console.log(username)
     }
-
+    }, [])
 
   useEffect(() => {
     if (!isSaved && code) {
