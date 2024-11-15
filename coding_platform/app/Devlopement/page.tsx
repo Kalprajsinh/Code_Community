@@ -127,24 +127,21 @@ function App() {
   const [selectedFile, setSelectedFile] = useState("");
   const [selectedFileContent, setSelectedFileContent] = useState("");
   const [code, setCode] = useState("");
-  const [username, setusername] = useState("");
 
   const isSaved = selectedFileContent === code;
 
   const { data: session } = useSession();
-
-  useEffect(()=>{
-    const storedUser = localStorage.getItem("user");
+  let username;
+  const storedUser = localStorage.getItem("user");
     if (storedUser) {
-      const username = JSON.parse(storedUser);
-      setusername(username);
+      username = JSON.parse(storedUser).email;
+      console.log(username)
     }
     else{
-      const username1 = session?.user?.name;
-      if(username1)
-      setusername(username1)
+      username = session?.user?.name;
+      console.log(username)
     }
-  },[])
+
 
   useEffect(() => {
     if (!isSaved && code) {
@@ -203,50 +200,52 @@ function App() {
 
   return (
     <div className="playground-container h-screen flex flex-col overflow-hidden">
-    
       <div className="toolbar bg-[#0F172A] text-white p-2 flex justify-between items-center">
         <div className="toolbar-left flex items-center gap-4">
           <span className="text-blue-400">●</span> CoDev Virtual Container
         </div>
         <div className="toolbar-right flex gap-4">
-          <button className="text-gray-400 hover:text-white" onClick={
-            () => {
-              (path:any) => {
+          <button
+            className="text-gray-400 hover:text-white"
+            onClick={() => {
+              (path: any) => {
                 setSelectedFileContent('');
                 setSelectedFile(path);
-                setCode(selectedFileContent)
-              }
-
-            }
-          }>Save</button>
+                setCode(selectedFileContent);
+              };
+            }}
+          >
+            Save
+          </button>
           <button className="text-gray-400 hover:text-white">Edit</button>
           <button className="text-gray-400 hover:text-white">View</button>
         </div>
       </div>
-
+  
       {/* Main Editor Area */}
-      <div className="editor-area flex flex-grow">
+      <div className="editor-area flex flex-grow flex-col md:flex-row">
         {/* Sidebar File Explorer */}
-        <div className="file-explorer w-1/6 bg-[#0E2D41] text-gray-300 p-4">
-        EXPLORER
+        <div className="file-explorer w-full md:w-1/6 bg-[#0E2D41] text-gray-300 p-4">
+          EXPLORER
           <FileTree
-            onSelect={(path:any) => {
+            onSelect={(path: any) => {
               setSelectedFileContent('');
               setSelectedFile(path);
             }}
             tree={fileTree}
           />
         </div>
-        
-        <div className="editor flex-grow bg-[#0F172A] text-white relative">
+  
+        <div className=" flex-grow bg-[#0F172A] text-white relative">
           <div className="editor-header bg-gray-800 text-gray-300 p-2 flex justify-between items-center">
             {selectedFile && (
               <p className="text-sm">
-                {selectedFile.replaceAll('/', ' > ')} {isSaved ? " - Saved" : " - Unsaved"}
+                {selectedFile.replaceAll('/', ' > ')} {isSaved ? '' : ''}
               </p>
             )}
           </div>
-          <div className="editor-content p-4 h-3/5">
+  
+          <div className="editor-content p-2 h-3/5">
             {selectedFile ? (
               <Editor
                 width="100%"
@@ -254,22 +253,23 @@ function App() {
                 language={getFileMode({ selectedFile })}
                 theme="vs-dark"
                 value={code}
-                onChange={(e) => setCode(e ?? "")}
+                onChange={(e) => setCode(e ?? '')}
               />
             ) : (
               <div className="text-gray-400 text-sm flex justify-center items-center h-full">
                 Select a file to start coding
               </div>
             )}
-            <div className=" absolute w-full scrollbar-hide z-10 terminal bg-black text-white p-2 h-full">
-            Terminal <hr />
-        <Terminal />
-      </div>
+            <div className="absolute w-full scrollbar-hide z-10 terminal bg-black text-white p-2 h-full">
+              Terminal <hr />
+              <Terminal />
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
+  
 }
 
 export default App;

@@ -45,8 +45,29 @@ export default function Home() {
   const [joined, setJoined] = useState<boolean>(false);
   const [users, setUsers] = useState<Array<{ id: string, username: string }>>([]);
   const router = useRouter();
-  const [isDrawerOpen, setIsDrawerOpen] = useState(true);
-  const { data: session } = useSession();
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  useEffect(() => {
+    if (window.innerWidth <= 768) {
+      setIsDrawerOpen(false);
+    } else {
+      setIsDrawerOpen(true);
+    }
+
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        setIsDrawerOpen(false);
+      } else {
+        setIsDrawerOpen(true);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     
@@ -96,9 +117,9 @@ export default function Home() {
   const compileCode = async () => {
     const options = {
       method: 'POST',
-      url: process.env.APIURL,
+      url: 'https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=false&wait=true',
       headers: {
-        'x-rapidapi-key': process.env.APIKEY,
+        'x-rapidapi-key': '6129d442d1mshc5b312e0de8c457p183411jsn6a0870a6274a',
         'x-rapidapi-host': 'judge0-ce.p.rapidapi.com',
         'Content-Type': 'application/json'
       },
@@ -166,130 +187,73 @@ export default function Home() {
 
   return (
     <div className="w-full h-screen bg-[#0F172A] overflow-hidden">
-      <div className="w-full h-20 border-b-2 border-b-[#7DD2FB] text-2xl flex items-center p-5 justify-between">
-        <div className="font-bold">
-          &lt;/&gt;&nbsp;Compiler
-        </div>
+      {/* Header */}
+      <div className="w-full h-20 border-b-2 border-b-[#7DD2FB] text-xl sm:text-2xl flex items-center px-5 justify-between">
+        <div className="font-bold">&lt;/&gt;&nbsp;Compiler</div>
         <Header />
-        {/* <div className="flex justify-center items-center gap-2 mr-4 text-xl">
-        {!session?.user ? (
-          <>
-            <button
-              className="w-20 h-10 p-2 text-[#7DD2FB] text-sm"
-              onClick={() => {
-                router.push("/login");
-              }}
-            >
-              Login
-            </button>
-            <button
-              className="w-20 h-10 border p-2 bg-[#7DD2FB] rounded-full text-black text-sm"
-              onClick={() => {
-                router.push("/signup");
-              }}
-            >
-              SignUp
-            </button>
-          </>
-        ) : (
-          // If user is authenticated, display user info and sign out button
-          <div className="flex items-center gap-4">
-            <img
-              src={session?.user?.image ?? ""} // Fallback to default avatar
-              className="w-10 h-10 rounded-full"
-              alt=""
-            />
-            <div className="flex flex-col">
-              <span className="text-sky-100">{session.user.name}</span>
-              <span className="text-sky-100 text-sm">{session.user.email}</span>
-            </div>
-            <button
-              onClick={() => {signOut()
-                router.push("/");
-              }
-                
-              }
-              className="w-20 h-10 p-2 text-[#7DD2FB] text-lg hover:text-white transition"
-            >
-              Logout
-            </button>
-          </div>
-        )}
-      </div> */}
       </div>
-
-      <div className="w-full h-screen flex">
+  
+      {/* Main Container */}
+      <div className="w-full h-screen flex flex-col md:flex-row">
+        {/* Drawer */}
         <div
           className={`${
             isDrawerOpen ? "block" : "hidden"
-          } fixed md:relative w-1/6 border-r border-[#7DD2FB] h-screen bg-[#0E2D41] md:bg-transparent`}
+          } fixed md:relative w-2/5 md:w-1/6 border-r border-[#7DD2FB] h-screen bg-[#0E2D41] md:bg-transparent z-10`}
         >
           <div className="p-2 flex gap-3 items-center border-b border-b-[#7DD2FB] h-12">
-            <a onClick={toggleDrawer} className="cursor-pointer text-vs">Users</a>
+            <a onClick={toggleDrawer} className="cursor-pointer text-sm">
+              Users
+            </a>
             <button
-              className="bg-[#0E2D41] rounded-md text-[#7DD2FB] w-1 h-4 text-vs font-bold md:w-6 md:h-6 md:text-sm"
+              className="bg-[#0E2D41] rounded-md text-[#7DD2FB] w-5 h-5 text-xs md:w-6 md:h-6 md:text-sm"
               onClick={toggleDrawer}
-              >
+            >
               &lt;-
             </button>
           </div>
-          <p className="text-vs">&nbsp;</p>
-          <ul className="grid grid-cols-1 md:grid-cols-2">
+          <p className="text-sm">&nbsp;</p>
+          <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 p-2">
             {users.map((user) => (
-              <li key={user.id} className="flex justify-center items-center font-bold mb-3">
-                <div className="bg-[#0F172A] w-12 text-sm xl:w-28 xl:h-16 h-12 xl:text-base rounded-xl flex justify-center items-center">
+              <li
+                key={user.id}
+                className="flex justify-center items-center font-bold mb-2"
+              >
+                <div className="bg-[#0F172A] w-12 text-xs md:text-sm xl:w-28 xl:h-16 xl:text-base rounded-xl flex justify-center items-center">
                   {user.username}
                 </div>
               </li>
             ))}
           </ul>
-          
-        <div>
-            <video autoPlay muted className="w-48 h-48"></video>
-            <video  autoPlay className="w-48 h-48"></video>
+          <div className="flex flex-col items-center gap-2">
+            <video autoPlay muted className="w-24 h-24 md:w-48 md:h-48"></video>
+            <video autoPlay className="w-24 h-24 md:w-48 md:h-48"></video>
           </div>
-        
         </div>
-
-        {/* Main content area */}
+  
+        {/* Main Content Area */}
         <div
           className={`${
-            isDrawerOpen ? "w-5/6" : "w-full"
-          } border-r border-[#7DD2FB] h-screen flex ml-auto`}
+            isDrawerOpen ? "w-full md:w-5/6" : "w-full"
+          } border-r border-[#7DD2FB] h-full flex flex-col md:flex-row`}
         >
-          <div className="w-2/3 border-r border-[#7DD2FB] h-screen">
-            <div className="border-b border-b-[#7DD2FB] h-12 flex">
-              <div className={`${
-                isDrawerOpen ? "hidden" : ""
-              } p-2 flex gap-3 items-center h-12`}>
-                {/* Add your drawer content here */}
-                <a onClick={toggleDrawer} className="cursor-pointer text-vs">Users</a>
-                <button
-                  className="text-[#7DD2FB] rounded-md w-1 h-4 text-vs font-bold md:w-6 md:h-6 md:text-sm flex pt-0.5"
-                  onClick={toggleDrawer}
-                >
-                  -&gt;
-                </button>
-              </div>
-              <div className="flex justify-between w-full">
-                <div className="flex">
-                  {/* <button
-                    className="bg-[#0F172A] text-white py-2 px-5 rounded-md w-16 h-8 text-base font-bold flex justify-center items-center m-2 md:block hidden"
-                  >
-                    📂
-                  </button>
+          {/* Editor Area */}
+          <div className="w-full md:w-2/3 border-b md:border-b-0 md:border-r border-[#7DD2FB] h-full flex flex-col">
+            <div className="border-b border-b-[#7DD2FB] h-12 flex items-center px-2 justify-between">
+              {!isDrawerOpen && (
+                <div className="flex items-center gap-3">
+                  <a onClick={toggleDrawer} className="cursor-pointer text-sm">
+                    Users
+                  </a>
                   <button
-                    className="bg-[#0E2D41] text-white py-2 px-5 rounded-md w-16 h-8 text-base font-bold hover:bg-[#7DD2FB] hover:text-[#0F172A] flex justify-center items-center m-2 md:block hidden"
+                    className="text-[#7DD2FB] rounded-md w-5 h-5 text-xs md:w-6 md:h-6 md:text-sm flex"
+                    onClick={toggleDrawer}
                   >
-                    
-                  </button> */}
-                  <div className="flex justify-center items-center m-4">
-
-                  &lt;/&gt;&nbsp;
-                  </div>
+                    -&gt;
+                  </button>
                 </div>
-          
-                <div className="flex items-center gap-2">
+              )}
+              <div className="flex justify-end w-full items-center gap-2">
                 <button
                     className="bg-[#0E2D41] text-white py-2 px-5 rounded-md hover:bg-[#7DD2FB] hover:text-[#0F172A] h-8 text-base font-bold flex justify-center items-center m-2"
                     onClick={compileCode}
@@ -310,11 +274,10 @@ export default function Home() {
                     <option value="php">PHP</option>
                     <option value="javascript">Javascript</option>
                   </select>
-                  <span className="text-white">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+
                 </div>
               </div>
-            </div>
-            <div className="w-full h-full">
+            <div className="w-full h-96 md:h-full  flex-grow">
               <Editor
                 defaultLanguage="python"
                 language={language}
@@ -325,11 +288,13 @@ export default function Home() {
               />
             </div>
           </div>
-          <div className="w-1/3 border-r border-[#7DD2FB] h-screen">
+  
+          {/* Output Area */}
+          <div className="w-full md:w-1/3 h-full flex-grow">
             <div className="border-b border-b-[#7DD2FB] h-12 flex items-center px-2 text-white justify-center">
-              &gt;_ output 
+              &gt;_ output
             </div>
-            <div className="p-4 text-white">
+            <div className="p-4 text-white h-full flex-grow">
               <pre className="w-full h-full p-2 bg-gray-900 rounded-b-lg overflow-auto">
                 {output}
               </pre>
@@ -339,7 +304,7 @@ export default function Home() {
       </div>
     </div>
   );
-}
+}  
 
 // "use client";
 

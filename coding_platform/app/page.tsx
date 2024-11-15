@@ -9,7 +9,6 @@ import { useState,useEffect } from "react";
 import axios from "axios";
 import Link from "next/link"
 import { gsap } from "gsap";
-import { json } from "stream/consumers";
 
 const technologies = [
   { src: "3.png", initialX: 8, initialY: 10 },
@@ -230,7 +229,10 @@ export default function Component() {
       />
         </p>
         
-        <button onClick={handleClick2} className="relative group bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 text-lg rounded-full">
+        <button onClick={() => {
+      const journeySection = document.getElementById("start-journey");
+      journeySection?.scrollIntoView({ behavior: "smooth" });
+    }} className="relative group bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 text-lg rounded-full">
           <span className="relative z-10">Get Started</span>
           <div className="absolute inset-0 rounded-full bg-blue-400 blur-lg group-hover:blur-xl transition-all duration-300 opacity-50"></div>
         </button>
@@ -242,8 +244,8 @@ export default function Component() {
       <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-gray-900 pointer-events-none block md:hidden"></div> */}
 
       </div>
-      <div className="w-full h-auto flex flex-col justify-center items-center bg-gray-900 bg-opacity-50 text-center p-10">
-      <h1 className="text-3xl md:text-4xl font-bold text-white">Start Your Journey</h1>
+      <div id="start-journey" style={{ scrollMarginTop: "80px" }} className="w-full h-auto flex flex-col justify-center items-center bg-gray-900 bg-opacity-50 text-center p-10">
+      <h1 className="text-3xl md:text-4xl font-bold text-white">Explore Your Path</h1>
       
       <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl w-full px-4">
         {/* Coding Card */}
