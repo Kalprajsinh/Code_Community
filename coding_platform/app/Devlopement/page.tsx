@@ -83,6 +83,8 @@ const getFileMode = ({ selectedFile }:any) => {
   switch (extension) {
     case "js":
       return "javascript";
+    case "jsx":
+        return "javascript";
     case "py":
       return "python";
     case "java":
@@ -134,6 +136,12 @@ function App() {
   let username:any;
   useEffect(()=>{
   const storedUser = localStorage.getItem("user");
+  const storeddir = localStorage.getItem("userdir");
+  if(storeddir && JSON.parse(storeddir).dirname !== undefined)
+  {
+    username = JSON.parse(storeddir).dirname;
+    console.log(username)
+  }else
     if (storedUser) {
       username = JSON.parse(storedUser).email;
       console.log(username)

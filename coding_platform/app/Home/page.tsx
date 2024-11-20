@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import io from 'socket.io-client';
 import Editor from "@monaco-editor/react";
 import axios from 'axios';
-import { useSession,signOut } from "next-auth/react";
 import Header from "../component/Header";
 
 const socket = io('https://code-community-ftp2.onrender.com');
@@ -147,8 +146,9 @@ export default function Home() {
 
   if (!joined) {
     return (
-      <div className="w-full h-screen flex items-center justify-center bg-[#0F172A]">
-        <div className="p-5 bg-[#0E2D41] rounded-lg">
+      <div className="w-full h-screen items-center justify-center bg-[#0F172A] grid grid-cols-1 md:grid-cols-2">
+        <div className="w-full flex justify-center items-center">
+        <div className="m-10 p-5 bg-[#0E2D41] rounded-lg max-w-72">
           <h2 className="text-white mb-4 text-2xl">Join a Room</h2>
           <form
             onSubmit={(e) => {
@@ -181,21 +181,35 @@ export default function Home() {
             </button>
           </form>
         </div>
+        </div>
+        <div className="text-white mb-4 ml-10">
+              <h3 className="font-semibold text-lg mb-2">How to Join:</h3>
+              <ul className="list-disc pl-5">
+                <li>Ask the room creator to share the unique Room ID.</li>
+                <li>If you're the creator, generate a unique Room ID and share it with others to join.</li>
+                <li>Enter the Room ID in the input field below.</li>
+                <li>Enter your username.</li>
+                <li>Click <span className="font-bold">Join Room</span> to enter the room.</li>
+              </ul>
+              <p className="mt-2 text-sm text-gray-400">
+                Example Room ID: <span className="font-bold">12345ABC</span>
+              </p>
+            </div>
       </div>
     );
   }
 
   return (
     <div className="w-full h-screen bg-[#0F172A] overflow-hidden">
-      {/* Header */}
+
       <div className="w-full h-20 border-b-2 border-b-[#7DD2FB] text-xl sm:text-2xl flex items-center px-5 justify-between">
         <div className="font-bold">&lt;/&gt;&nbsp;Compiler</div>
         <Header />
       </div>
   
-      {/* Main Container */}
+
       <div className="w-full h-screen flex flex-col md:flex-row">
-        {/* Drawer */}
+
         <div
           className={`${
             isDrawerOpen ? "block" : "hidden"
@@ -231,13 +245,13 @@ export default function Home() {
           </div>
         </div>
   
-        {/* Main Content Area */}
+
         <div
           className={`${
             isDrawerOpen ? "w-full md:w-5/6" : "w-full"
           } border-r border-[#7DD2FB] h-full flex flex-col md:flex-row`}
         >
-          {/* Editor Area */}
+
           <div className="w-full md:w-2/3 border-b md:border-b-0 md:border-r border-[#7DD2FB] h-full flex flex-col">
             <div className="border-b border-b-[#7DD2FB] h-12 flex items-center px-2 justify-between">
               {!isDrawerOpen && (
@@ -274,7 +288,11 @@ export default function Home() {
                     <option value="php">PHP</option>
                     <option value="javascript">Javascript</option>
                   </select>
-
+                  <button
+                    className="bg-[#0E2D41] text-white py-2 px-5 rounded-md hover:bg-[#7DD2FB] hover:text-[#0F172A] h-8 text-base font-bold flex justify-center items-center m-2"
+                  >
+                    AI Review
+                  </button>
                 </div>
               </div>
             <div className="w-full h-96 md:h-full  flex-grow">

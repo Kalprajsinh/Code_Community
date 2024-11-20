@@ -141,7 +141,7 @@ export default function Component() {
   return (
     <div>
 
-    <div className="relative min-h-screen overflow-hidden bg-gray-900 bg-opacity-40">
+    <div className="relative min-h-screen overflow-hidden bg-gray-950 bg-opacity-80">
       <video
         autoPlay
         muted
@@ -151,7 +151,7 @@ export default function Component() {
         <source src="/bg.mp4" type="video/mp4" />
       </video>
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-sm bg-gray-900 bg-opacity-60">
+      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-sm bg-gray-950 bg-opacity-80">
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-3">
           <div className="flex items-center justify-between h-16">
@@ -159,14 +159,14 @@ export default function Component() {
               <Link href="/" className="flex-shrink-0 flex gap-1 justify-center items-center">
                 <FaCode className="h-8 w-8 text-blue-400" /><p className="font-bold text-blue-400">CoDev</p>
               </Link>
-              <div className="hidden md:block">
+              {/* <div className="hidden md:block">
                 <div className="ml-10 flex items-baseline space-x-4">
                   <Link href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Home</Link>
                   <Link href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Features</Link>
                   <Link href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Pricing</Link>
                   <Link href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">About</Link>
                 </div>
-              </div>
+              </div> */}
             </div>
             <Header />
           </div>
@@ -177,7 +177,7 @@ export default function Component() {
   {technologies.map(({ src, initialX, initialY }, index) => (
     <div
       key={index}
-      className="absolute opacity-80 transition-transform duration-1000 ease-out"
+      className="absolute transition-transform duration-1000 ease-out"
       style={{
         left: `${initialX}%`, 
         top: `${initialY}%`,
@@ -206,7 +206,7 @@ export default function Component() {
 </div>
       
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-center text-center p-5">
-        <h1 className="mb-6 text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl/none lg:text-7xl/none">
+        <h1 className="mb-6 text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl/none lg:text-6xl/none">
           <span className="bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">
           &nbsp;Welcome to CoDev&nbsp;
           </span>
@@ -230,8 +230,7 @@ export default function Component() {
         </p>
         
         <button onClick={() => {
-      const journeySection = document.getElementById("start-journey");
-      journeySection?.scrollIntoView({ behavior: "smooth" });
+      router.push('/Templates');
     }} className="relative group bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 text-lg rounded-full">
           <span className="relative z-10">Get Started</span>
           <div className="absolute inset-0 rounded-full bg-blue-400 blur-lg group-hover:blur-xl transition-all duration-300 opacity-50"></div>
@@ -239,12 +238,12 @@ export default function Component() {
       </div>
 
       {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#00000014] via-transparent to-gray-900 pointer-events-none"></div>
-      {/* <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-gray-900 pointer-events-none hidden md:block"></div>
-      <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-gray-900 pointer-events-none block md:hidden"></div> */}
+      <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-gray-950 pointer-events-none"></div>
+      {/* <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-gray-950 pointer-events-none hidden md:block"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-gray-950 pointer-events-none block md:hidden"></div> */}
 
       </div>
-      <div id="start-journey" style={{ scrollMarginTop: "80px" }} className="w-full h-auto flex flex-col justify-center items-center bg-gray-900 bg-opacity-50 text-center p-10">
+      <div id="start-journey" style={{ scrollMarginTop: "80px" }} className="w-full h-auto flex flex-col justify-center items-center bg-gray-950 text-center p-10">
       <h1 className="text-3xl md:text-4xl font-bold text-white">Explore Your Path</h1>
       
       <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl w-full px-4">
@@ -297,7 +296,7 @@ export default function Component() {
 
       </div>
     </div>
-    <section className="w-full py-16 bg-gray-900 bg-opacity-50 text-white">
+    <section className="w-full py-16 bg-gray-950 text-white">
   <div className="max-w-7xl mx-auto px-4">
     
    
@@ -310,22 +309,26 @@ export default function Component() {
       </p>
     </div>
 
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
       {[
-        { title: 'Real-time Collaboration', icon: FaLaptopCode, text: 'Collaborate with developers in real-time, enhancing productivity and teamwork.' },
-        { title: 'Integrated Terminal', icon: FaTerminal, text: 'Access a built-in terminal to execute commands without leaving the platform.' },
-        { title: 'Docker Integration', icon: FaDocker, text: 'Seamlessly integrate Docker for containerized development and deployment.' },
-        { title: 'Extensible Platform', icon: FaCode, text: 'Extend the platform with plugins and integrations to suit your workflow.' },
-        { title: 'Online Development', icon: FaCodepen, text: 'Develop your projects online with a robust and secure environment.' },
-        { title: 'File System Support', icon: FaFile, text: 'Manage project files efficiently with comprehensive file system support.' }
-      ].map(({ title, icon: Icon, text }, idx) => (
+        { title: 'Real-time Collaboration', icon: FaLaptopCode, text: 'Collaborate with developers in real-time, enhancing productivity and teamwork.' , url:"https://t4.ftcdn.net/jpg/05/57/30/45/360_F_557304508_4HiGABGRGUvzfS1XQkKYVmH45TGhUVOn.jpg"},
+        { title: 'Integrated Terminal', icon: FaTerminal, text: 'Access a built-in terminal to execute commands without leaving the platform.',url:"https://thumbs.dreamstime.com/b/programming-code-running-down-old-computer-screen-terminal-binary-background-k-loop-142330923.jpg"},
+        { title: 'Docker Integration', icon: FaDocker, text: 'Seamlessly integrate Docker for containerized development and deployment.',url:"https://buddy.works/_next/image?url=%2Fblog%2Fthumbnails%2Fbuild-docker-image-cover.png&w=1920&q=75"},
+        { title: 'Extensible Platform', icon: FaCode, text: 'Extend the platform with plugins and integrations to suit your workflow.' ,url:"https://static.vecteezy.com/system/resources/thumbnails/048/039/160/small_2x/isometric-computer-technology-animation-desktop-computer-platforms-software-programming-coding-concept-code-with-computer-monitor-transparent-background-with-alpha-channel-free-video.jpg"},
+        { title: 'Online Development', icon: FaCodepen, text: 'Develop your projects online with a robust and secure environment.' ,url:"https://img.lovepik.com/bg/20240414/3D-Illustrated-Web-Development-Coding-and-Programming-Background-Visualized_5827647_wh860.jpg!/fw/860"},
+        { title: 'File System Support', icon: FaFile, text: 'Manage project files efficiently with comprehensive file system support.' ,url:"https://www.cgtechnologies.com/wp-content/uploads/2021/10/files-and-folders-network-picture-id954199216-2.jpg"}
+      ].map(({ title, icon: Icon, text , url}, idx) => (
         <div 
           key={idx} 
-          className="flex flex-col items-center text-center p-6 rounded-lg bg-gray-800 bg-opacity-60 shadow-lg hover:bg-opacity-80 transition-all transform hover:scale-105"
+          className="flex flex-col justify-center items-center h-60 mx-0 md:mx-20 text-center p-6 rounded-lg shadow-lg hover:bg-opacity-80 transition-all transform hover:scale-105"
+          style={{
+            background: `url(${url})`,
+          }}
         >
           <Icon className="text-2xl md:text-3xl mb-4 text-cyan-200" />
           <h3 className="text-xl font-semibold mb-2">{title}</h3>
           <p className="text-gray-300">{text}</p>
+          <div className="absolute inset-0 bg-gradient-to-t from-blue-950 to-transparent pointer-events-none -z-10"></div>
         </div>
       ))}
     </div>
@@ -485,7 +488,7 @@ export default function Component() {
 //     </div>
 //         {/*  */}
 //         <hr />
-//         <section className="w-full py-16 bg-gray-900 text-white bg-black bg-opacity-40">
+//         <section className="w-full py-16 bg-gray-950 text-white bg-black bg-opacity-40">
 //         <div className="max-w-7xl mx-auto px-4">
  
 //           <div className="text-center mb-12">
@@ -581,7 +584,7 @@ export default function Component() {
 //       </section>
 
 //       {/* Footer */}
-//       <footer className="w-full py-6 bg-gray-900 text-center text-white">
+//       <footer className="w-full py-6 bg-gray-950 text-center text-white">
 //         <p>&copy; {new Date().getFullYear()} CoDev. All rights reserved.</p>
 //       </footer>
 //         </>
