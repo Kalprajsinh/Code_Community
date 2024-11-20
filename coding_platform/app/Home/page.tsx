@@ -186,7 +186,7 @@ export default function Home() {
               <h3 className="font-semibold text-lg mb-2">How to Join:</h3>
               <ul className="list-disc pl-5">
                 <li>Ask the room creator to share the unique Room ID.</li>
-                <li>If you're the creator, generate a unique Room ID and share it with others to join.</li>
+                <li>If you&apos;re the creator, generate a unique Room ID and share it with others to join.</li>
                 <li>Enter the Room ID in the input field below.</li>
                 <li>Enter your username.</li>
                 <li>Click <span className="font-bold">Join Room</span> to enter the room.</li>
