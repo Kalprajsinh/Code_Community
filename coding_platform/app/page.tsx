@@ -289,7 +289,9 @@ export default function Component() {
           <p className="text-gray-400 mb-6">
             Experience a full-featured development environment with built-in version control, debugging tools, and deployment options all in one place.
           </p>
-          <button className="bg-purple-500 text-white font-medium py-2 px-6 rounded-lg hover:bg-purple-600 transition-colors duration-300" onClick={handleClick2}>
+          <button className="bg-purple-500 text-white font-medium py-2 px-6 rounded-lg hover:bg-purple-600 transition-colors duration-300" onClick={()=>{
+            router.push('/Templates');
+          }}>
             Start Development
           </button>
         </div>

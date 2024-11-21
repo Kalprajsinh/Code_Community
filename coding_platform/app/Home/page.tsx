@@ -146,7 +146,7 @@ export default function Home() {
 
   if (!joined) {
     return (
-      <div className="w-full h-screen items-center justify-center bg-[#0F172A] grid grid-cols-1 md:grid-cols-2">
+      <div className="w-full h-screen items-center justify-center bg-[#070b14] grid grid-cols-1 md:grid-cols-2">
         <div className="w-full flex justify-center items-center">
         <div className="m-10 p-5 bg-[#0E2D41] rounded-lg max-w-72">
           <h2 className="text-white mb-4 text-2xl">Join a Room</h2>
@@ -200,9 +200,9 @@ export default function Home() {
   }
 
   return (
-    <div className="w-full h-screen bg-[#0F172A] overflow-hidden">
+    <div className="w-full h-screen bg-[#111111] overflow-hidden">
 
-      <div className="w-full h-20 border-b-2 border-b-[#7DD2FB] text-xl sm:text-2xl flex items-center px-5 justify-between">
+      <div className="w-full h-20 border-b-2 border-b-[#434343] text-xl sm:text-2xl flex items-center px-5 justify-between rounded-xl">
         <div className="font-bold">&lt;/&gt;&nbsp;Compiler</div>
         <Header />
       </div>
@@ -213,14 +213,14 @@ export default function Home() {
         <div
           className={`${
             isDrawerOpen ? "block" : "hidden"
-          } fixed md:relative w-2/5 md:w-1/6 border-r border-[#7DD2FB] h-screen bg-[#0E2D41] md:bg-transparent z-10`}
+          } fixed md:relative w-2/5 md:w-1/6 border-r h-screen bg-[#111111] md:bg-transparent z-10 m-2 rounded-2xl border border-[#434343]`}
         >
-          <div className="p-2 flex gap-3 items-center border-b border-b-[#7DD2FB] h-12">
+          <div className="p-2 flex gap-3 items-center border-b border-b-[#434343] h-12">
             <a onClick={toggleDrawer} className="cursor-pointer text-sm">
               Users
             </a>
             <button
-              className="bg-[#0E2D41] rounded-md text-[#7DD2FB] w-5 h-5 text-xs md:w-6 md:h-6 md:text-sm"
+              className="bg-[#111111] rounded-md text-white w-5 h-5 text-xs md:w-6 md:h-6 md:text-sm"
               onClick={toggleDrawer}
             >
               &lt;-
@@ -233,7 +233,7 @@ export default function Home() {
                 key={user.id}
                 className="flex justify-center items-center font-bold mb-2"
               >
-                <div className="bg-[#0F172A] w-12 text-xs md:text-sm xl:w-28 xl:h-16 xl:text-base rounded-xl flex justify-center items-center">
+                <div className="bg-[#3b3b3b] w-12 text-xs md:text-sm xl:w-28 xl:h-16 xl:text-base rounded-xl flex justify-center items-center">
                   {user.username}
                 </div>
               </li>
@@ -249,34 +249,34 @@ export default function Home() {
         <div
           className={`${
             isDrawerOpen ? "w-full md:w-5/6" : "w-full"
-          } border-r border-[#7DD2FB] h-full flex flex-col md:flex-row`}
+          } border-r border-[#434343] h-full flex flex-col md:flex-row`}
         >
 
-          <div className="w-full md:w-2/3 border-b md:border-b-0 md:border-r border-[#7DD2FB] h-full flex flex-col">
-            <div className="border-b border-b-[#7DD2FB] h-12 flex items-center px-2 justify-between">
+          <div className="w-full md:w-2/3 border-b md:border-b-0 md:border-r h-full flex flex-col m-2 rounded-2xl border border-[#434343]">
+            <div className="border-b border-b-[#434343] h-12 flex items-center px-2 justify-between">
               {!isDrawerOpen && (
                 <div className="flex items-center gap-3">
                   <a onClick={toggleDrawer} className="cursor-pointer text-sm">
                     Users
                   </a>
                   <button
-                    className="text-[#7DD2FB] rounded-md w-5 h-5 text-xs md:w-6 md:h-6 md:text-sm flex"
+                    className="text-[#434343] rounded-md w-5 h-5 text-xs md:w-6 md:h-6 md:text-sm flex"
                     onClick={toggleDrawer}
                   >
                     -&gt;
                   </button>
                 </div>
               )}
-              <div className="flex justify-end w-full items-center gap-2">
+              <div className="flex justify-end w-full items-center gap-2 ">
                 <button
-                    className="bg-[#0E2D41] text-white py-2 px-5 rounded-md hover:bg-[#7DD2FB] hover:text-[#0F172A] h-8 text-base font-bold flex justify-center items-center m-2"
+                    className="bg-[#373737] text-white py-2 px-5 rounded-md hover:bg-[#434343] h-8 text-base font-bold flex justify-center items-center m-2"
                     onClick={compileCode}
                     disabled={isLoading}
                   >
                     {isLoading ? 'Compiling...' : 'RUN'}
                   </button>
                   <select
-                    className="px-2 py-1 rounded-lg text-white bg-[#0E2D41]"
+                    className="px-2 py-1 rounded-lg text-white bg-[#373737]"
                     value={language}
                     onChange={handleLanguageChange}
                   >
@@ -288,11 +288,7 @@ export default function Home() {
                     <option value="php">PHP</option>
                     <option value="javascript">Javascript</option>
                   </select>
-                  <button
-                    className="bg-[#0E2D41] text-white py-2 px-5 rounded-md hover:bg-[#7DD2FB] hover:text-[#0F172A] h-8 text-base font-bold flex justify-center items-center m-2"
-                  >
-                    AI Review
-                  </button>
+          
                 </div>
               </div>
             <div className="w-full h-96 md:h-full  flex-grow">
@@ -308,12 +304,12 @@ export default function Home() {
           </div>
   
           {/* Output Area */}
-          <div className="w-full md:w-1/3 h-full flex-grow">
-            <div className="border-b border-b-[#7DD2FB] h-12 flex items-center px-2 text-white justify-center">
+          <div className="w-full md:w-1/3 h-full flex-grow bg-[#111111] border border-[#434343] rounded-2xl m-2">
+            <div className="border-b border-b-[#434343] h-12 flex items-center px-2 text-white justify-center">
               &gt;_ output
             </div>
             <div className="p-4 text-white h-full flex-grow">
-              <pre className="w-full h-full p-2 bg-gray-900 rounded-b-lg overflow-auto">
+              <pre className="w-full h-full p-2 bg-[#111111] rounded-b-lg overflow-auto">
                 {output}
               </pre>
             </div>

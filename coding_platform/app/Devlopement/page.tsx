@@ -209,7 +209,7 @@ function App() {
 
   return (
     <div className="playground-container h-screen flex flex-col overflow-hidden">
-      <div className="toolbar bg-[#0F172A] text-white p-2 flex justify-between items-center">
+      <div className="toolbar bg-[#111111] text-white p-2 flex justify-between items-center m-2 rounded-2xl border border-[#434343]">
         <div className="toolbar-left flex items-center gap-4">
           <span className="text-blue-400">●</span> CoDev Virtual Container
         </div>
@@ -234,7 +234,7 @@ function App() {
       {/* Main Editor Area */}
       <div className="editor-area flex flex-grow flex-col md:flex-row">
         {/* Sidebar File Explorer */}
-        <div className="file-explorer w-full md:w-1/6 bg-[#0E2D41] text-gray-300 p-4">
+        <div className="file-explorer w-full md:w-1/6 bg-[#0b0b0b] text-gray-300 p-4 m-2 rounded-2xl border border-[#434343]">
           EXPLORER
           <FileTree
             onSelect={(path: any) => {
@@ -245,8 +245,8 @@ function App() {
           />
         </div>
   
-        <div className=" flex-grow bg-[#0F172A] text-white relative">
-          <div className="editor-header bg-gray-800 text-gray-300 p-2 flex justify-between items-center">
+        <div className=" flex-grow bg-[#1e1e1e] text-white relative m-2 rounded-2xl border border-[#434343]">
+          <div className="editor-header bg-gray-800 text-gray-300 p-2 flex justify-between items-center rounded-t-2xl">
             {selectedFile && (
               <p className="text-sm">
                 {selectedFile.replaceAll('/', ' > ')} {isSaved ? '' : ''}
@@ -269,7 +269,7 @@ function App() {
                 Select a file to start coding
               </div>
             )}
-            <div className="absolute w-full scrollbar-hide z-10 terminal bg-black text-white p-2 h-full">
+            <div className="absolute w-full scrollbar-hide z-10 terminal bg-black text-white p-2 h-full rounded-b-2xl border border-[#434343] -ml-2">
               Terminal <hr />
               <Terminal />
             </div>
