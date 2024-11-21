@@ -1,0 +1,1 @@
+// for Run code use node index.js
