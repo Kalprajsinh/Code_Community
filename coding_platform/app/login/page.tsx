@@ -124,7 +124,7 @@ const LoginPage: React.FC = () => {
             className="flex items-center justify-center border border-gray-300 px-4 py-2 rounded-lg hover:text-sky-400 transition duration-200"
           >
             <FaFacebook className="mr-2 text-xl text-white" />
-            Continue with Apple
+            Continue with Facebook
           </button>
           <div className="h-16"></div>
         </div>
