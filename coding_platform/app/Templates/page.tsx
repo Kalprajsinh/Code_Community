@@ -533,7 +533,7 @@ export default function Template() {
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-6 max-w-7xl mx-auto">
-  <button className="w-full bg-gray-800 rounded-lg p-5 shadow-lg hover:shadow-2xl transition flex flex-col items-start text-left hover:bg-gray-700" onClick={handleClick01}>
+  {/* <button className="w-full bg-gray-800 rounded-lg p-5 shadow-lg hover:shadow-2xl transition flex flex-col items-start text-left hover:bg-gray-700" onClick={handleClick01}>
     <div className="text-3xl"><FaReact className="text-blue-400" /></div><br />
     <h2 className="text-xl font-semibold">React</h2>
     <ul className="list-disc text-gray-400">
@@ -542,7 +542,7 @@ export default function Template() {
     <div className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition flex justify-center items-center gap-2">
       Start <FaArrowRight className="text-sm mt-1" />
     </div>
-  </button>
+  </button> */}
 
   <button className="w-full bg-gray-800 rounded-lg p-5 shadow-lg hover:shadow-2xl transition flex flex-col items-start text-left hover:bg-gray-700" onClick={handleClick06}>
     <div className="text-3xl flex gap-2 items-center"><FaNodeJs className="text-green-600" />+<img className='w-10 h-10' src="./6.png" alt="" />  <img className='w-auto h-10' src="https://miro.medium.com/v2/resize:fit:440/1*J3G3akaMpUOLegw0p0qthA.png" alt="" /></div><br />

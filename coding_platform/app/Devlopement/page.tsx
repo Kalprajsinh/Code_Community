@@ -46,7 +46,7 @@ const FileTree = ({ tree, onSelect }:any) => {
 
 
 const Terminal = () => {
-  const terminalRef = useRef<HTMLDivElement | null>(null); 
+  const terminalRef = useRef<HTMLDivElement | null>(null);
   const isRendered = useRef(false);
 
   useEffect(() => {
@@ -59,17 +59,79 @@ const Terminal = () => {
 
     if (terminalRef.current) {
       term.open(terminalRef.current);
-  }
+    }
+
+    // Comprehensive forbidden commands and patterns
+    const isMaliciousCommand = (command: string): boolean => {
+      const forbiddenPatterns = [
+        
+        /rm\s+-rf/,         
+        /mv\s+\/.+/,        
+        /cp\s+-rf/,         
+        /dd\s+if=/,         
+        /chmod\s+\d+/,     
+        /chown\s+.+/,  
+        /passwd/,          
+        /sudo/,           
+        /adduser/,         
+        /deluser/,          
+        /usermod/,         
+        /groupadd/,        
+        /groupdel/,         
+        
+        
+        /ssh/,             
+        /scp/,
+        /ftp/,              
+        /wget\s+http/,      
+        /curl\s+http/,      
+        /ping\s+-c\s+\d+/, 
+        /traceroute/,       
+        
+        /kill\s+-9/,        
+        /pkill\s+.+/,       
+        /reboot/,           
+        /shutdown/,         
+        /killall/,          
+        /ps\s+-ef/,         
+        /top/,              
+        /htop/,           
+        /\|\|/,            
+        /&&/,               
+        /;/,                
+        /\|/,              
+        /\$\(.*\)/,         
+        /`.*`/,             
+        
+        /mkfs/,            
+        /mount/,            
+        /umount/,           
+        /crontab/,        
+        /iptables/,         
+        /ufw/,              
+      ];
+
+      return forbiddenPatterns.some((pattern) => pattern.test(command));
+    };
 
     term.onData((data) => {
-      socket.emit("terminal:write", data);
+      if (isMaliciousCommand(data)) {
+        term.write("\r\n⚠️ Command rejected: Unsafe input detected.\r\n");
+      } else {
+        socket.emit("terminal:write", data);
+      }
     });
 
-    function onTerminalData(data:any) {
+    function onTerminalData(data: any) {
       term.write(data);
     }
 
     socket.on("terminal:data", onTerminalData);
+
+    // Cleanup on unmount
+    return () => {
+      socket.off("terminal:data", onTerminalData);
+    };
   }, []);
 
   return <div ref={terminalRef} id="terminal" />;

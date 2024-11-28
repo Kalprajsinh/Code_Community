@@ -1,8 +1,8 @@
 // How to check request 
-// For GET : curl http://localhost:3000/
-// For POST: curl -X POST http://localhost:3000/ -d "key=value"
-// For PUT: curl -X PUT http://localhost:3000/ -d "key=value"
-// For DELETE: curl -X DELETE http://localhost:3000/
+// For GET : curl http://localhost:3000/ & node index.js
+// For POST: curl -X POST http://localhost:3000/ -d "key=value" & node index.js
+// For PUT: curl -X PUT http://localhost:3000/ -d "key=value" & node index.js
+// For DELETE: curl -X DELETE http://localhost:3000/ & node index.js
 
 const express = require('express')
 const app = express()

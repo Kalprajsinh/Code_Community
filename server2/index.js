@@ -180,7 +180,7 @@ function restartPty(cwd) {
 
 
 
-const IGNORE_DIRS = ['node_modules']; // Directories to ignore
+const IGNORE_DIRS = ['node_modules'];
 
 async function generateFileTree(directory) {
     const tree = {};
