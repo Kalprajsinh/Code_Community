@@ -287,7 +287,7 @@ export default function Component() {
           </div>
           <h2 className="text-2xl font-semibold text-white mb-3">Integrated Development</h2>
           <p className="text-gray-400 mb-6">
-            Experience a full-featured development environment with built-in version control, debugging tools, and deployment options all in one place.
+          Experience a full development environment with file system and termimal support, platform to reduce the time spent on setup and environment configuration.
           </p>
           <button className="bg-purple-500 text-white font-medium py-2 px-6 rounded-lg hover:bg-purple-600 transition-colors duration-300" onClick={()=>{
             router.push('/Templates');

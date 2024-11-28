@@ -571,11 +571,12 @@ export default function Template() {
       <div className="flex space-x-1">
         <FaHtml5 className="text-orange-500" />
         <FaCss3Alt className="text-blue-500" />
+        <FaJs className="text-yellow-400" />
       </div>
     </div><br />
-    <h2 className="text-xl font-semibold">HTML + CSS</h2>
+    <h2 className="text-xl font-semibold">HTML + CSS + JavaScript</h2>
     <ul className="list-disc text-gray-400">
-      A classic HTML and CSS template for static websites.
+      Combines HTML, CSS, and JavaScript web pages.
     </ul>
     <div className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition flex justify-center items-center gap-2">
       Start <FaArrowRight className="text-sm mt-1" />
@@ -587,12 +588,11 @@ export default function Template() {
       <div className="flex space-x-1">
         <FaHtml5 className="text-orange-500" />
         <FaCss3Alt className="text-blue-500" />
-        <FaJs className="text-yellow-400" />
       </div>
     </div><br />
-    <h2 className="text-xl font-semibold">HTML + CSS + JavaScript</h2>
+    <h2 className="text-xl font-semibold">HTML + CSS</h2>
     <ul className="list-disc text-gray-400">
-      Combines HTML, CSS, and JavaScript web pages.
+      A classic HTML and CSS template for static websites.
     </ul>
     <div className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition flex justify-center items-center gap-2">
       Start <FaArrowRight className="text-sm mt-1" />
@@ -610,22 +610,22 @@ export default function Template() {
     </div>
   </button>
 
-  <button className="w-full bg-gray-800 rounded-lg p-5 shadow-lg hover:shadow-2xl transition flex flex-col items-start text-left hover:bg-gray-700" onClick={handleClick04}>
-    <div className="text-3xl"><FaJava className="text-red-600" /></div><br />
-    <h2 className="text-xl font-semibold">Java</h2>
+  <button className="w-full bg-gray-800 rounded-lg p-5 shadow-lg hover:shadow-2xl transition flex flex-col items-start text-left hover:bg-gray-700" onClick={handleClick05}>
+    <div className="w-8 h-8"><img src="https://images.vexels.com/media/users/3/166477/isolated/preview/9bb722f0e85ddbc1ce0f064534fd2311-python-programming-language-icon.png" alt="" /></div><br />
+    <h2 className="text-xl font-semibold">Python</h2>
     <ul className="list-disc text-gray-400">
-      Starter project for Java applications.
+      Template for Python projects.
     </ul>
     <div className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition flex justify-center items-center gap-2">
       Start <FaArrowRight className="text-sm mt-1" />
     </div>
   </button>
 
-  <button className="w-full bg-gray-800 rounded-lg p-5 shadow-lg hover:shadow-2xl transition flex flex-col items-start text-left hover:bg-gray-700" onClick={handleClick05}>
-    <div className="w-8 h-8"><img src="https://images.vexels.com/media/users/3/166477/isolated/preview/9bb722f0e85ddbc1ce0f064534fd2311-python-programming-language-icon.png" alt="" /></div><br />
-    <h2 className="text-xl font-semibold">Python</h2>
+  <button className="w-full bg-gray-800 rounded-lg p-5 shadow-lg hover:shadow-2xl transition flex flex-col items-start text-left hover:bg-gray-700" onClick={handleClick04}>
+    <div className="text-3xl"><FaJava className="text-red-600" /></div><br />
+    <h2 className="text-xl font-semibold">Java</h2>
     <ul className="list-disc text-gray-400">
-      Template for Python projects.
+      Starter project for Java applications.
     </ul>
     <div className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition flex justify-center items-center gap-2">
       Start <FaArrowRight className="text-sm mt-1" />
