@@ -49,12 +49,12 @@ export default function Template() {
   };
 
     const handleClick2 = async () => {
-        setShowAlert2(true);
-        setTimeout(() => {
-            setShowAlert(false);
-          }, 4000);
         const storedUser = localStorage.getItem("user");
         if (storedUser) {
+          setShowAlert2(true);
+            setTimeout(() => {
+                setShowAlert(false);
+              }, 4000);
           const storeduserinfo = JSON.parse(storedUser);
           try {
             const response = await axios.get('https://docker-x4tj.onrender.com/dirname', {
@@ -70,6 +70,10 @@ export default function Template() {
         }
         else
         if ((session && session.user)) {
+          setShowAlert2(true);
+            setTimeout(() => {
+                setShowAlert(false);
+              }, 4000);
         try {
             const response = await axios.get('https://docker-x4tj.onrender.com/dirname', {
               params: {
