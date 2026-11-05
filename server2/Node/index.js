@@ -1,8 +1,8 @@
 // How to check request 
-// For GET : curl http://localhost:3000/ & node index.js
-// For POST: curl -X POST http://localhost:3000/ -d "key=value" & node index.js
-// For PUT: curl -X PUT http://localhost:3000/ -d "key=value" & node index.js
-// For DELETE: curl -X DELETE http://localhost:3000/ & node index.js
+// For GET : curl https://codev-omega.vercel.app/ & node index.js
+// For POST: curl -X POST https://codev-omega.vercel.app/ -d "key=value" & node index.js
+// For PUT: curl -X PUT https://codev-omega.vercel.app/ -d "key=value" & node index.js
+// For DELETE: curl -X DELETE https://codev-omega.vercel.app/ & node index.js
 
 const express = require('express')
 const app = express()

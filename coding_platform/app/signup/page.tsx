@@ -1,42 +1,22 @@
-// pages/login.tsx
-
 "use client";
 
-import { signIn,useSession } from "next-auth/react";
-import { FaApple, FaGoogle, FaGithub, FaFacebook } from "react-icons/fa";
-import { useState } from "react";
+import { signIn, useSession } from "next-auth/react";
+import { FaGithub } from "react-icons/fa";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 
 const Signup: React.FC = () => {
-  const [name, setname] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const router = useRouter();
   const { data: session } = useSession();
 
-  if (session && session.user) {
-    console.log(session)
-    router.push("/");
-  }
-
-  const handleEmailSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-        const response = await axios.post("/api/signup", { name, email, password });
-        if (response.status === 201) {
-            localStorage.setItem("user", JSON.stringify({ name: response.data.name, email }));
-            router.push("/");  // Redirect after signup
-        }
-    } catch (error) {
-        console.error("Signup failed:", error);
+  useEffect(() => {
+    if (session && session.user) {
+      router.push("/");
     }
-};
-
-
+  }, [session, router]);
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-black bg-opacity-60">
+    <div className="min-h-screen flex items-center justify-center bg-black bg-opacity-60 p-4 relative overflow-hidden">
       <video
         autoPlay
         muted
@@ -45,104 +25,40 @@ const Signup: React.FC = () => {
       >
         <source src="/bg.mp4" type="video/mp4" />
       </video>
-      <div className="flex-1 flex flex-col justify-center items-center p-8 shadow-lg">
-        <h2 className="text-3xl font-bold mb-6 text-blue-600">SignUp to CoDev</h2>
-        <form className="w-full max-w-md" onSubmit={handleEmailSignup}>
-        <div className="mb-4">
-            <label htmlFor="email" className="block text-gray-100 mb-2">
-              Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              required
-              value={name}
-              onChange={(e) => setname(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 bg-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Your Name"
-            />
-          </div>
-          <div className="mb-4">
-            <label htmlFor="email" className="block text-gray-100 mb-2">
-              Email Address
-            </label>
-            <input
-              type="email"
-              id="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 bg-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="you@example.com"
-            />
-          </div>
-          <div className="mb-6">
-            <label htmlFor="password" className="block text-gray-100 mb-2">
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 bg-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="********"
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-200"
-          >
-            Sign Up
-          </button>
-        </form>
-        <p className="mt-4 text-sm text-gray-600">
-          Alrady have an account?{" "}
-          <a href="/login" className="text-blue-500 hover:underline">
-            Login
-          </a>
+      <div className="w-full max-w-md backdrop-blur-md border border-[#333333] rounded-2xl p-8 shadow-2xl flex flex-col items-center text-center">
+        <h2 className="text-3xl font-extrabold text-blue-500 mb-2">Join CoDev</h2>
+        <p className="text-gray-400 text-sm mb-8">
+          Create an account to start coding, sharing, and collaborating in real-time
         </p>
-      </div>
 
-      {/* Right Side: Social Authentication */}
-      <div className="flex-1 flex flex-col justify-center items-center p-8 shadow-lg">
-        <h2 className="text-3xl font-bold mb-6 text-blue-600">Or continue with</h2>
-        <div className="flex flex-col space-y-4 w-full max-w-md">
+        <div className="flex flex-col space-y-4 w-full">
           <button
             onClick={() => signIn("google")}
-            className="flex items-center justify-center border border-gray-300 px-4 py-2 rounded-lg hover:text-sky-400 transition duration-200"
+            className="flex items-center justify-center gap-3 w-full bg-white/10 hover:bg-white/20 text-white font-medium border border-gray-600 px-4 py-3 rounded-xl transition duration-200 shadow-sm"
           >
             <img
-          src="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png"
-          alt="Google Icon"
-          className="w-8 h-8"
-        />
-            Continue with Google
+              src="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png"
+              alt="Google Icon"
+              className="w-6 h-6 object-contain"
+            />
+            <span>Continue with Google</span>
           </button>
+
           <button
             onClick={() => signIn("github")}
-            className="flex items-center justify-center border border-gray-300 px-4 py-2 rounded-lg hover:text-sky-400 transition duration-200"
+            className="flex items-center justify-center gap-3 w-full bg-[#24292e] hover:bg-[#2f363d] text-white font-medium border border-gray-700 px-4 py-3 rounded-xl transition duration-200 shadow-sm"
           >
-            <FaGithub className="mr-2 text-xl text-white" />
-            Continue with GitHub
+            <FaGithub className="text-2xl text-white" />
+            <span>Continue with GitHub</span>
           </button>
-          <button
-            onClick={() => signIn("apple")}
-            className="flex items-center justify-center border border-gray-300 px-4 py-2 rounded-lg hover:text-sky-400 transition duration-200"
-          >
-            <FaApple className="mr-2 text-xl text-white" />
-            Continue with Apple
-          </button>
-          <button
-            onClick={() => signIn("facebook")}
-            className="flex items-center justify-center border border-gray-300 px-4 py-2 rounded-lg hover:text-sky-400 transition duration-200"
-          >
-            <FaFacebook className="mr-2 text-xl text-white" />
-            Continue with Apple
-          </button>
-          <div className="h-16"></div>
         </div>
+
+        <p className="mt-8 text-xs text-gray-400">
+          Already have an account?{" "}
+          <a href="/login" className="text-blue-400 hover:underline">
+            Sign In
+          </a>
+        </p>
       </div>
     </div>
   );

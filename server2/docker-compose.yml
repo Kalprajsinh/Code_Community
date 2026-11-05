@@ -6,8 +6,8 @@ services:
       - "9000:9000"
       - "8000:8000"
     volumes:
-      - .:/app       # Mount the current directory inside the container
-      - /app/node_modules # Ignore node_modules to prevent overwriting
-      - ./user:/app/user  # Mount the user directory for filesystem changes
+      - .:/app       
+      - /app/node_modules
+      - ./user:/app/user 
     stdin_open: true   # Keep stdin open for the terminal
     tty: true          # Allocate a pseudo-TTY for the terminal

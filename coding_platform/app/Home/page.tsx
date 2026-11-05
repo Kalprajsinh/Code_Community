@@ -7,7 +7,7 @@ import Editor from "@monaco-editor/react";
 import axios from 'axios';
 import Header from "../component/Header";
 
-const socket = io('https://code-community-ftp2.onrender.com');
+const socket = io('https://code-community-server.onrender.com');
 
 const helloWorldExamples = {
   python: 'print("Hello, World!")',
@@ -69,17 +69,17 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    
+
     socket.on('text', (message: string) => {
       setCode(message);
     });
 
-    
+
     socket.on('room_users', (users: Array<{ id: string, username: string }>) => {
       setUsers(users);
     });
 
-    
+
     return () => {
       socket.off('text');
       socket.off('room_users');
@@ -133,7 +133,7 @@ export default function Home() {
     try {
       const response = await axios.request(options);
       setOutput(response.data.stdout || response.data.stderr);
-    } catch (error:any) {
+    } catch (error: any) {
       setOutput('Error: ' + error.message);
     }
     setIsLoading(false);
@@ -148,53 +148,53 @@ export default function Home() {
     return (
       <div className="w-full h-screen items-center justify-center bg-[#070b14] grid grid-cols-1 md:grid-cols-2">
         <div className="w-full flex justify-center items-center">
-        <div className="m-10 p-5 bg-[#0E2D41] rounded-lg max-w-72">
-          <h2 className="text-white mb-4 text-2xl">Join a Room</h2>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleJoinRoom();
-            }}
-            className="flex flex-col gap-4"
-          >
-            <input
-              type="text"
-              placeholder="Room ID"
-              value={room}
-              onChange={(e) => setRoom(e.target.value)}
-              className="p-2 rounded-md text-[#0F172A]"
-              required
-            />
-            <input
-              type="text"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="p-2 rounded-md text-[#0F172A]"
-              required
-            />
-            <button
-              type="submit"
-              className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+          <div className="m-10 p-5 bg-[#0E2D41] rounded-lg max-w-72">
+            <h2 className="text-white mb-4 text-2xl">Join a Room</h2>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleJoinRoom();
+              }}
+              className="flex flex-col gap-4"
             >
-              Join Room
-            </button>
-          </form>
-        </div>
+              <input
+                type="text"
+                placeholder="Room ID"
+                value={room}
+                onChange={(e) => setRoom(e.target.value)}
+                className="p-2 rounded-md text-[#0F172A]"
+                required
+              />
+              <input
+                type="text"
+                placeholder="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="p-2 rounded-md text-[#0F172A]"
+                required
+              />
+              <button
+                type="submit"
+                className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+              >
+                Join Room
+              </button>
+            </form>
+          </div>
         </div>
         <div className="text-white mb-4 ml-10">
-              <h3 className="font-semibold text-lg mb-2">How to Join:</h3>
-              <ul className="list-disc pl-5">
-                <li>Ask the room creator to share the unique Room ID.</li>
-                <li>If you&apos;re the creator, generate a unique Room ID and share it with others to join.</li>
-                <li>Enter the Room ID in the input field below.</li>
-                <li>Enter your username.</li>
-                <li>Click <span className="font-bold">Join Room</span> to enter the room.</li>
-              </ul>
-              <p className="mt-2 text-sm text-gray-400">
-                Example Room ID: <span className="font-bold">12345ABC</span>
-              </p>
-            </div>
+          <h3 className="font-semibold text-lg mb-2">How to Join:</h3>
+          <ul className="list-disc pl-5">
+            <li>Ask the room creator to share the unique Room ID.</li>
+            <li>If you&apos;re the creator, generate a unique Room ID and share it with others to join.</li>
+            <li>Enter the Room ID in the input field below.</li>
+            <li>Enter your username.</li>
+            <li>Click <span className="font-bold">Join Room</span> to enter the room.</li>
+          </ul>
+          <p className="mt-2 text-sm text-gray-400">
+            Example Room ID: <span className="font-bold">12345ABC</span>
+          </p>
+        </div>
       </div>
     );
   }
@@ -206,14 +206,13 @@ export default function Home() {
         <div className="font-bold">&lt;/&gt;&nbsp;Compiler</div>
         <Header />
       </div>
-  
+
 
       <div className="w-full h-screen flex flex-col md:flex-row">
 
         <div
-          className={`${
-            isDrawerOpen ? "block" : "hidden"
-          } fixed md:relative w-2/5 md:w-1/6 border-r h-screen bg-[#111111] md:bg-transparent z-10 m-2 rounded-2xl border border-[#434343]`}
+          className={`${isDrawerOpen ? "block" : "hidden"
+            } fixed md:relative w-2/5 md:w-1/6 border-r h-screen bg-[#111111] md:bg-transparent z-10 m-2 rounded-2xl border border-[#434343]`}
         >
           <div className="p-2 flex gap-3 items-center border-b border-b-[#434343] h-12">
             <a onClick={toggleDrawer} className="cursor-pointer text-sm">
@@ -244,12 +243,11 @@ export default function Home() {
             <video autoPlay className="w-24 h-24 md:w-48 md:h-48"></video>
           </div>
         </div>
-  
+
 
         <div
-          className={`${
-            isDrawerOpen ? "w-full md:w-5/6" : "w-full"
-          } border-r border-[#434343] h-full flex flex-col md:flex-row`}
+          className={`${isDrawerOpen ? "w-full md:w-5/6" : "w-full"
+            } border-r border-[#434343] h-full flex flex-col md:flex-row`}
         >
 
           <div className="w-full md:w-2/3 border-b md:border-b-0 md:border-r h-full flex flex-col m-2 rounded-2xl border border-[#434343]">
@@ -269,28 +267,28 @@ export default function Home() {
               )}
               <div className="flex justify-end w-full items-center gap-2 ">
                 <button
-                    className="bg-[#373737] text-white py-2 px-5 rounded-md hover:bg-[#434343] h-8 text-base font-bold flex justify-center items-center m-2"
-                    onClick={compileCode}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? 'Compiling...' : 'RUN'}
-                  </button>
-                  <select
-                    className="px-2 py-1 rounded-lg text-white bg-[#373737]"
-                    value={language}
-                    onChange={handleLanguageChange}
-                  >
-                    <option value="python">Python</option>
-                    <option value="c">C</option>
-                    <option value="cpp">C++</option>
-                    <option value="java">Java</option>
-                    <option value="csharp">C#</option>
-                    <option value="php">PHP</option>
-                    <option value="javascript">Javascript</option>
-                  </select>
-          
-                </div>
+                  className="bg-[#373737] text-white py-2 px-5 rounded-md hover:bg-[#434343] h-8 text-base font-bold flex justify-center items-center m-2"
+                  onClick={compileCode}
+                  disabled={isLoading}
+                >
+                  {isLoading ? 'Compiling...' : 'RUN'}
+                </button>
+                <select
+                  className="px-2 py-1 rounded-lg text-white bg-[#373737]"
+                  value={language}
+                  onChange={handleLanguageChange}
+                >
+                  <option value="python">Python</option>
+                  <option value="c">C</option>
+                  <option value="cpp">C++</option>
+                  <option value="java">Java</option>
+                  <option value="csharp">C#</option>
+                  <option value="php">PHP</option>
+                  <option value="javascript">Javascript</option>
+                </select>
+
               </div>
+            </div>
             <div className="w-full h-96 md:h-full  flex-grow">
               <Editor
                 defaultLanguage="python"
@@ -302,7 +300,7 @@ export default function Home() {
               />
             </div>
           </div>
-  
+
           {/* Output Area */}
           <div className="w-full md:w-1/3 h-full flex-grow bg-[#111111] border border-[#434343] rounded-2xl m-2">
             <div className="border-b border-b-[#434343] h-12 flex items-center px-2 text-white justify-center">
@@ -318,7 +316,7 @@ export default function Home() {
       </div>
     </div>
   );
-}  
+}
 
 // "use client";
 
@@ -329,7 +327,7 @@ export default function Home() {
 // import axios from "axios";
 
 // // WebSocket connection
-// const socket = io("https://code-community-ftp2.onrender.com");
+// const socket = io("https://code-community-server.onrender.com");
 
 // const helloWorldExamples = {
 //   python: 'print("Hello, World!")',

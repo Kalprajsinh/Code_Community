@@ -1,3 +1,3 @@
 // for Run code use
-// g++ hello.cpp
+// g++ main.cpp
 // ./a.out

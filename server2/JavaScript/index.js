@@ -1,1 +1,2 @@
-// for Run code use node index.js
+// for Run code use 
+// node index.js

@@ -1,14 +1,22 @@
 "use client"
-import { useCallback, useEffect, useState,useRef } from "react";
+import { useCallback, useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import "./App.css";
 import Editor from "@monaco-editor/react";
 import { io } from 'socket.io-client'
-import { Terminal as XTerminal } from "@xterm/xterm";
-import "@xterm/xterm/css/xterm.css";
 
-const socket = io('https://docker-x4tj.onrender.com')
+const Terminal = dynamic(() => import("./Terminal"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full flex items-center justify-center text-xs text-gray-500">
+      Loading terminal...
+    </div>
+  ),
+});
 
-const FileTreeNode = ({ fileName, nodes, onSelect, path }:any) => {
+const socket = io('https://code-community-wdgl.onrender.com')
+
+const FileTreeNode = ({ fileName, nodes, onSelect, path }: any) => {
   const isDir = !!nodes;
   return (
     <div
@@ -40,113 +48,20 @@ const FileTreeNode = ({ fileName, nodes, onSelect, path }:any) => {
   );
 };
 
-const FileTree = ({ tree, onSelect }:any) => {
+const FileTree = ({ tree, onSelect }: any) => {
   return <FileTreeNode onSelect={onSelect} fileName="/" path="" nodes={tree} />;
 };
 
-
-const Terminal = () => {
-  const terminalRef = useRef<HTMLDivElement | null>(null);
-  const isRendered = useRef(false);
-
-  useEffect(() => {
-    if (isRendered.current) return;
-    isRendered.current = true;
-
-    const term = new XTerminal({
-      rows: 20,
-    });
-
-    if (terminalRef.current) {
-      term.open(terminalRef.current);
-    }
-
-    // Comprehensive forbidden commands and patterns
-    const isMaliciousCommand = (command: string): boolean => {
-      const forbiddenPatterns = [
-        
-        /rm\s+-rf/,         
-        /mv\s+\/.+/,        
-        /cp\s+-rf/,         
-        /dd\s+if=/,         
-        /chmod\s+\d+/,     
-        /chown\s+.+/,  
-        /passwd/,          
-        /sudo/,           
-        /adduser/,         
-        /deluser/,          
-        /usermod/,         
-        /groupadd/,        
-        /groupdel/,         
-        
-        
-        /ssh/,             
-        /scp/,
-        /ftp/,              
-        /wget\s+http/,      
-        /curl\s+http/,      
-        /ping\s+-c\s+\d+/, 
-        /traceroute/,       
-        
-        /kill\s+-9/,        
-        /pkill\s+.+/,       
-        /reboot/,           
-        /shutdown/,         
-        /killall/,          
-        /ps\s+-ef/,         
-        /top/,              
-        /htop/,           
-        /\|\|/,            
-        /&&/,               
-        /;/,                
-        /\|/,              
-        /\$\(.*\)/,         
-        /`.*`/,             
-        
-        /mkfs/,            
-        /mount/,            
-        /umount/,           
-        /crontab/,        
-        /iptables/,         
-        /ufw/,              
-      ];
-
-      return forbiddenPatterns.some((pattern) => pattern.test(command));
-    };
-
-    term.onData((data) => {
-      if (isMaliciousCommand(data)) {
-        term.write("\r\n⚠️ Command rejected: Unsafe input detected.\r\n");
-      } else {
-        socket.emit("terminal:write", data);
-      }
-    });
-
-    function onTerminalData(data: any) {
-      term.write(data);
-    }
-
-    socket.on("terminal:data", onTerminalData);
-
-    // Cleanup on unmount
-    return () => {
-      socket.off("terminal:data", onTerminalData);
-    };
-  }, []);
-
-  return <div ref={terminalRef} id="terminal" />;
-};
-
-const getFileMode = ({ selectedFile }:any) => {
+const getFileMode = ({ selectedFile }: any) => {
   const splitedArray = selectedFile.split(".");
-  
+
   const extension = splitedArray[splitedArray.length - 1];
 
   switch (extension) {
     case "js":
       return "javascript";
     case "jsx":
-        return "javascript";
+      return "javascript";
     case "py":
       return "python";
     case "java":
@@ -191,31 +106,40 @@ function App() {
   const [selectedFile, setSelectedFile] = useState("");
   const [selectedFileContent, setSelectedFileContent] = useState("");
   const [code, setCode] = useState("");
+  const [currentDir, setCurrentDir] = useState<string>("user");
 
   const isSaved = selectedFileContent === code;
 
   const { data: session } = useSession();
-  let username:any;
-  useEffect(()=>{
-  const storedUser = localStorage.getItem("user");
-  const storeddir = localStorage.getItem("userdir");
-  if(storeddir && JSON.parse(storeddir).dirname !== undefined)
-  {
-    username = JSON.parse(storeddir).dirname;
-    console.log(username)
-  }else
-    if (storedUser) {
-      username = JSON.parse(storedUser).email;
-      console.log(username)
-    }
-    else{
-      username = session?.user?.name;
-      console.log(username)
-    }
-    }, [])
 
   useEffect(() => {
-    if (!isSaved && code) {
+    try {
+      const storedUser = localStorage.getItem("user");
+      const storeddir = localStorage.getItem("userdir");
+      if (storeddir) {
+        const parsed = JSON.parse(storeddir);
+        if (parsed.dirname) {
+          setCurrentDir(parsed.dirname);
+          return;
+        }
+      }
+      if (storedUser) {
+        const parsed = JSON.parse(storedUser);
+        if (parsed.email) {
+          setCurrentDir(parsed.email);
+          return;
+        }
+      }
+      if (session?.user?.name) {
+        setCurrentDir(session.user.name);
+      }
+    } catch (e) {
+      console.error("Error reading directory from storage:", e);
+    }
+  }, [session]);
+
+  useEffect(() => {
+    if (!isSaved && code && selectedFile) {
       const timer = setTimeout(() => {
         socket.emit("file:change", {
           path: selectedFile,
@@ -236,25 +160,41 @@ function App() {
     setCode(selectedFileContent);
   }, [selectedFileContent]);
 
-  const getFileTree = async () => {
-    console.log("Username:", username);
-    const response2 = await axios.get('https://docker-x4tj.onrender.com/dirname', {
-      params: {
-        dirname: username
-        }
-    });
-    const response = await fetch("https://docker-x4tj.onrender.com/files");
-    const result = await response.json();
-    console.log(result.tree);
-    setFileTree(result.tree);
-  };
+  const getFileTree = useCallback(async () => {
+    try {
+      const response = await fetch("https://code-community-wdgl.onrender.com/files");
+      const result = await response.json();
+      setFileTree(result.tree || {});
+    } catch (err) {
+      console.error("Failed to fetch file tree:", err);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!currentDir) return;
+    axios
+      .get("https://code-community-wdgl.onrender.com/dirname", {
+        params: { dirname: currentDir },
+      })
+      .then(() => {
+        getFileTree();
+      })
+      .catch((err) => {
+        console.error("Failed to initialize dirname:", err);
+      });
+  }, [currentDir, getFileTree]);
+
   const getFileContents = useCallback(async () => {
     if (!selectedFile) return;
-    const response = await fetch(
-      `https://docker-x4tj.onrender.com/files/content?path=${selectedFile}`
-    );
-    const result = await response.json();
-    setSelectedFileContent(result.content);
+    try {
+      const response = await fetch(
+        `https://code-community-wdgl.onrender.com/files/content?path=${selectedFile}`
+      );
+      const result = await response.json();
+      setSelectedFileContent(result.content);
+    } catch (err) {
+      console.error("Failed to read file content:", err);
+    }
   }, [selectedFile]);
 
   useEffect(() => {
@@ -262,12 +202,11 @@ function App() {
   }, [getFileContents, selectedFile]);
 
   useEffect(() => {
-    getFileTree();
     socket.on("file:refresh", getFileTree);
     return () => {
       socket.off("file:refresh", getFileTree);
     };
-  }, []);
+  }, [getFileTree]);
 
   return (
     <div className="playground-container h-screen flex flex-col overflow-hidden">
@@ -279,11 +218,13 @@ function App() {
           <button
             className="text-gray-400 hover:text-white"
             onClick={() => {
-              (path: any) => {
-                setSelectedFileContent('');
-                setSelectedFile(path);
-                setCode(selectedFileContent);
-              };
+              if (selectedFile && code) {
+                socket.emit("file:change", {
+                  path: selectedFile,
+                  content: code,
+                });
+                setSelectedFileContent(code);
+              }
             }}
           >
             Save
@@ -292,12 +233,12 @@ function App() {
           <button className="text-gray-400 hover:text-white">View</button>
         </div>
       </div>
-  
+
       {/* Main Editor Area */}
-      <div className="editor-area flex flex-grow flex-col md:flex-row">
+      <div className="editor-area flex flex-grow flex-col md:flex-row min-h-0 overflow-hidden">
         {/* Sidebar File Explorer */}
-        <div className="file-explorer w-full md:w-1/6 bg-[#0b0b0b] text-gray-300 p-4 m-2 rounded-2xl border border-[#434343]">
-          EXPLORER
+        <div className="file-explorer w-full md:w-1/6 bg-[#0b0b0b] text-gray-300 p-4 m-2 rounded-2xl border border-[#434343] overflow-y-auto">
+          <div className="text-xs font-semibold uppercase tracking-wider mb-2">EXPLORER</div>
           <FileTree
             onSelect={(path: any) => {
               setSelectedFileContent('');
@@ -306,21 +247,24 @@ function App() {
             tree={fileTree}
           />
         </div>
-  
-        <div className=" flex-grow bg-[#1e1e1e] text-white relative m-2 rounded-2xl border border-[#434343]">
+
+        <div className="flex-grow bg-[#1e1e1e] text-white flex flex-col m-2 rounded-2xl border border-[#434343] min-h-0 overflow-hidden">
           <div className="editor-header bg-gray-800 text-gray-300 p-2 flex justify-between items-center rounded-t-2xl">
-            {selectedFile && (
+            {selectedFile ? (
               <p className="text-sm">
-                {selectedFile.replaceAll('/', ' > ')} {isSaved ? '' : ''}
+                {selectedFile.replaceAll('/', ' > ')} {isSaved ? '' : '●'}
               </p>
+            ) : (
+              <p className="text-sm text-gray-400">No file selected</p>
             )}
           </div>
-  
-          <div className="editor-content p-2 h-3/5">
+
+          {/* Main Code Editor */}
+          <div className="editor-content p-2 flex-1 min-h-0 relative">
             {selectedFile ? (
               <Editor
                 width="100%"
-                height="calc(100% - 40px)"
+                height="100%"
                 language={getFileMode({ selectedFile })}
                 theme="vs-dark"
                 value={code}
@@ -328,19 +272,28 @@ function App() {
               />
             ) : (
               <div className="text-gray-400 text-sm flex justify-center items-center h-full">
-                Select a file to start coding
+                Select a file from the explorer to start coding
               </div>
             )}
-            <div className="absolute w-full scrollbar-hide z-10 terminal bg-black text-white p-2 h-full rounded-b-2xl border border-[#434343] -ml-2">
-              Terminal <hr />
-              <Terminal />
+          </div>
+
+          {/* Terminal Panel */}
+          <div className="h-64 bg-black text-white p-3 rounded-b-2xl border-t border-[#434343] flex flex-col">
+            <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#333333] text-xs font-semibold text-gray-400 uppercase tracking-wider">
+              <span>Terminal</span>
+              <span className="text-[10px] text-green-400 flex items-center gap-1">
+                <span className="inline-block w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                Connected
+              </span>
+            </div>
+            <div className="flex-1 min-h-0 relative">
+              <Terminal socket={socket} />
             </div>
           </div>
         </div>
       </div>
     </div>
   );
-  
 }
 
 export default App;

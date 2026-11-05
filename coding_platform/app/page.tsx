@@ -89,7 +89,7 @@ export default function Component() {
     if (storedUser) {
       const storeduserinfo = JSON.parse(storedUser);
       try {
-        const response = await axios.get('https://docker-x4tj.onrender.com/dirname', {
+        const response = await axios.get('https://code-community-wdgl.onrender.com/dirname', {
           params: {
             dirname: storeduserinfo.email
             }
@@ -103,7 +103,7 @@ export default function Component() {
     else
     if ((session && session.user)) {
     try {
-        const response = await axios.get('https://docker-x4tj.onrender.com/dirname', {
+        const response = await axios.get('https://code-community-wdgl.onrender.com/dirname', {
           params: {
             dirname: username
             }
@@ -396,7 +396,7 @@ export default function Component() {
   //   if (session && session.user) {
   //     try {
   //       // Make GET request to /dirname endpoint with the dirname
-  //       const response = await axios.get('https://docker-x4tj.onrender.com/dirname', {
+  //       const response = await axios.get('https://code-community-wdgl.onrender.com/dirname', {
   //         params: {
   //           dirname: username
   //           }

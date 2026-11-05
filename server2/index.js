@@ -25,13 +25,19 @@ app.use(cors());
 app.use(express.json()); 
 
 app.get('/dirname', async (req, res) => {
-    const { dirname } = req.query;
+    let { dirname } = req.query;
 
     if (!dirname) {
-        return res.status(400).json({ error: 'dirname is required' });
+        dirname = 'user';
     }
 
-    folderName = path.join(__dirname, dirname);
+    const targetFolder = path.join(__dirname, dirname);
+
+    if (folderName === targetFolder && ptyProcess) {
+        return res.status(200).json({ message: `Directory already active: ${folderName}` });
+    }
+
+    folderName = targetFolder;
 
     try {
         await fs.access(folderName);
@@ -92,9 +98,12 @@ app.get('/files/content', async (req, res) => {
 io.on('connection', (socket) => {
     console.log(`Socket connected: ${socket.id}`);
 
-
     socket.emit('file:refresh');
 
+    // Prompt the shell on connect so client sees prompt immediately
+    if (ptyProcess) {
+        ptyProcess.write('\r');
+    }
 
     socket.on('file:change', async ({ path: filePath, content }) => {
         const absolutePath = path.join(folderName, filePath);
@@ -159,7 +168,8 @@ function restartPty(cwd) {
         ptyProcess.kill();
     }
 
-    ptyProcess = pty.spawn('bash', [], {
+    const shell = process.platform === 'win32' ? 'powershell.exe' : 'bash';
+    ptyProcess = pty.spawn(shell, [], {
         name: 'xterm-color',
         cols: 80,
         rows: 30,
